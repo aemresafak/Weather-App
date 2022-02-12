@@ -56,7 +56,6 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -230,12 +229,28 @@ class MainActivity : AppCompatActivity() {
     private fun updateUI(currentWeather: CurrentWeather) {
         binding.textViewCity.text = currentWeather.location.name
         binding.textViewCountry.text = currentWeather.location.country
-        val tempText = currentWeather.current.temperature.toString() + "°C"
+        val tempText = currentWeather.current.temperature.toString() + "°"
         binding.textViewTemperature.text = tempText
-        val humidityText = "Humidity is ${currentWeather.current.humidity} percent."
+        val humidityText = "Humidity is ${currentWeather.current.humidity}."
         binding.textViewHumidity.text = humidityText
-        val feelsLikeText = "Feels like ${currentWeather.current.feelslike} °C."
+        val feelsLikeText = "Feels like ${currentWeather.current.feelslike}°."
         binding.textViewFeelsLike.text = feelsLikeText
+        binding.textViewWindDirection.text = getDirectionFromAbbr(currentWeather.current.windDir)
+        val windSpeedText = "Wind speed is ${currentWeather.current.windSpeed} km/h."
+        binding.textViewWindSpeed.text = windSpeedText
+    }
+
+    private fun getDirectionFromAbbr(abbr: String): String {
+        return when (abbr) {
+            "N" -> "North"
+            "E" -> "East"
+            "S" -> "South"
+            "W" -> "West"
+            "NW" -> getDirectionFromAbbr("N") + getDirectionFromAbbr("W").lowercase()
+            "NE" -> getDirectionFromAbbr("N") + getDirectionFromAbbr("E").lowercase()
+            "SW" -> getDirectionFromAbbr("S") + getDirectionFromAbbr("W").lowercase()
+            else -> getDirectionFromAbbr("S") + getDirectionFromAbbr("E").lowercase()
+        }
     }
 
     private fun showLocationErrorToast() {
