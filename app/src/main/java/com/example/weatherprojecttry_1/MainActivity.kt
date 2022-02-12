@@ -1,10 +1,12 @@
 package com.example.weatherprojecttry_1
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.content.IntentSender
 import android.content.pm.PackageManager
+import android.location.Geocoder
 import android.os.Bundle
 import android.util.Log
 import android.widget.SearchView
@@ -15,12 +17,15 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import com.example.weatherprojecttry_1.data.currentWeather.CurrentWeather
+import com.example.weatherprojecttry_1.data.currentWeather.Location
 import com.example.weatherprojecttry_1.data.currentWeather.MyViewModel
 import com.example.weatherprojecttry_1.databinding.ActivityMainBinding
 import com.google.android.gms.common.api.ResolvableApiException
+import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
+import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 
@@ -29,6 +34,7 @@ private const val TAG = "MainActivity"
 private const val REQUEST_CHECK_SETTINGS = 0
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var viewModel: MyViewModel
     private lateinit var binding: ActivityMainBinding
     val requestPermissionLauncher = registerForActivityResult(
@@ -37,26 +43,18 @@ class MainActivity : AppCompatActivity() {
             requestGPS()
         }
         else {
-            Toast.makeText(
-                this,
-                "The app can not fetch the weather at your location!",
-                Toast.LENGTH_LONG
-            ).show()
+            showLocationErrorToast()
         }
     }
 
-    val enableGPSLauncher = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) {
-        Log.d(TAG, "isOkay: ${it.resultCode == Activity.RESULT_OK}")
-        Log.d(TAG, "isCanceled: ${it.resultCode == Activity.RESULT_CANCELED}")
 
-    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         viewModel = ViewModelProvider(this)[MyViewModel::class.java]
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
         addObservers()
         setSearchViewListener()
     }
@@ -103,7 +101,7 @@ class MainActivity : AppCompatActivity() {
     private fun requestGPS() {
         val locationRequest = LocationRequest.create().apply {
             interval = 15000
-            priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
+            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
         val settingsRequest = LocationSettingsRequest.Builder()
             .addLocationRequest(locationRequest)
@@ -134,8 +132,21 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    @SuppressLint("MissingPermission")
     private fun getLocation() {
-
+        val task = fusedLocationProviderClient.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY,CancellationTokenSource().token)
+        task.addOnSuccessListener {
+            if (it == null)
+                showLocationErrorToast()
+            else {
+                val geocoder = Geocoder(this)
+                val address = geocoder.getFromLocation(it.latitude,it.longitude,1)[0]
+                viewModel.fetchLiveData(address.locality)
+            }
+        }
+        task.addOnFailureListener {
+            showLocationErrorToast()
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -146,7 +157,7 @@ class MainActivity : AppCompatActivity() {
                     getLocation()
                 }
                 Activity.RESULT_CANCELED -> {
-                    Toast.makeText(this, "App will not be able to get location weather.",Toast.LENGTH_LONG).show()
+                    showLocationErrorToast()
                 }
             }
         }
@@ -192,6 +203,9 @@ class MainActivity : AppCompatActivity() {
         binding.textViewFeelsLike.text = feelsLikeText
     }
 
+    private fun showLocationErrorToast() {
+        Toast.makeText(this, "Location weather can not be fetched.",Toast.LENGTH_LONG).show()
+    }
 
 
 
