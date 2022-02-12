@@ -80,6 +80,8 @@ class MainActivity : AppCompatActivity() {
             val query = intent.getStringExtra(SearchManager.QUERY)
             recentSuggestions.saveRecentQuery(query,null)
             viewModel.fetchLiveData(query!!)
+            binding.progressBar.visibility = View.VISIBLE
+            binding.textViewUpdate.visibility = View.VISIBLE
         }
     }
 
@@ -195,9 +197,9 @@ class MainActivity : AppCompatActivity() {
         viewModel.getWeatherLiveData().observe(this) {
             if (it != null) {
                 if (binding.progressBar.visibility == View.VISIBLE)
-                    binding.progressBar.visibility = View.GONE
+                    binding.progressBar.visibility = View.INVISIBLE
                 if (binding.textViewUpdate.visibility == View.VISIBLE)
-                    binding.textViewUpdate.visibility = View.GONE
+                    binding.textViewUpdate.visibility = View.INVISIBLE
                 updateUI(it)
             }
         }
