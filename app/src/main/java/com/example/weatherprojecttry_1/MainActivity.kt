@@ -147,7 +147,7 @@ class MainActivity : AppCompatActivity() {
             else {
                 val geocoder = Geocoder(this)
                 val address = geocoder.getFromLocation(it.latitude,it.longitude,1)[0]
-                viewModel.fetchLiveData(address.locality)
+                viewModel.fetchLiveData(address.locality ?: address.adminArea)
             }
         }
         task.addOnFailureListener {
