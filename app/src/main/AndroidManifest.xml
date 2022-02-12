@@ -31,6 +31,8 @@
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable_config" />
         </activity>
+        <provider android:name=".data.RecentQueryProvider"
+            android:authorities="com.example.weatherprojecttry_1.data.RecentQueryProvider" />
     </application>
 
 </manifest>

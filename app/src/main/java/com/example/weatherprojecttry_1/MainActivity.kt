@@ -10,7 +10,7 @@ import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.os.Bundle
-import android.util.Log
+import android.provider.SearchRecentSuggestions
 import android.view.Menu
 import android.view.View
 import android.widget.SearchView
@@ -20,8 +20,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
+import com.example.weatherprojecttry_1.data.RecentQueryProvider
 import com.example.weatherprojecttry_1.data.currentWeather.CurrentWeather
-import com.example.weatherprojecttry_1.data.currentWeather.Location
 import com.example.weatherprojecttry_1.data.currentWeather.MyViewModel
 import com.example.weatherprojecttry_1.databinding.ActivityMainBinding
 import com.google.android.gms.common.api.ResolvableApiException
@@ -43,6 +43,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var viewModel: MyViewModel
     private lateinit var binding: ActivityMainBinding
+    private lateinit var recentSuggestions: SearchRecentSuggestions
     val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()) {
         if (it)
@@ -59,6 +60,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         viewModel = ViewModelProvider(this)[MyViewModel::class.java]
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+        recentSuggestions = SearchRecentSuggestions(this, RecentQueryProvider.AUTHORITY, RecentQueryProvider.MODE)
         addObservers()
     }
 
@@ -76,6 +78,7 @@ class MainActivity : AppCompatActivity() {
         super.onNewIntent(intent)
         if (intent?.action == Intent.ACTION_SEARCH) {
             val query = intent.getStringExtra(SearchManager.QUERY)
+            recentSuggestions.saveRecentQuery(query,null)
             viewModel.fetchLiveData(query!!)
         }
     }
