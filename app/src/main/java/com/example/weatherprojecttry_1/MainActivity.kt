@@ -1,6 +1,9 @@
 package com.example.weatherprojecttry_1
 
 import android.Manifest
+import android.app.Activity
+import android.content.Intent
+import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
@@ -10,16 +13,20 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.content.PackageManagerCompat
 import androidx.lifecycle.ViewModelProvider
 import com.example.weatherprojecttry_1.data.currentWeather.CurrentWeather
 import com.example.weatherprojecttry_1.data.currentWeather.MyViewModel
 import com.example.weatherprojecttry_1.databinding.ActivityMainBinding
+import com.google.android.gms.common.api.ResolvableApiException
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 
 
 private const val TAG = "MainActivity"
+private const val REQUEST_CHECK_SETTINGS = 0
 class MainActivity : AppCompatActivity() {
 
     private lateinit var viewModel: MyViewModel
@@ -27,15 +34,23 @@ class MainActivity : AppCompatActivity() {
     val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()) {
         if (it) {
-            getLocation()
+            requestGPS()
         }
         else {
             Toast.makeText(
                 this,
-                "The app will not fetch the weather at your location!",
+                "The app can not fetch the weather at your location!",
                 Toast.LENGTH_LONG
             ).show()
         }
+    }
+
+    val enableGPSLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) {
+        Log.d(TAG, "isOkay: ${it.resultCode == Activity.RESULT_OK}")
+        Log.d(TAG, "isCanceled: ${it.resultCode == Activity.RESULT_CANCELED}")
+
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,10 +61,11 @@ class MainActivity : AppCompatActivity() {
         setSearchViewListener()
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onStart() {
+        super.onStart()
         requestPermission()
     }
+
 
     private fun requestPermission() {
         when {
@@ -57,7 +73,7 @@ class MainActivity : AppCompatActivity() {
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED -> {
-                getLocation()
+                requestGPS()
             }
             ActivityCompat.shouldShowRequestPermissionRationale(
                 this,
@@ -81,13 +97,60 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             else -> requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
-
-
         }
     }
 
+    private fun requestGPS() {
+        val locationRequest = LocationRequest.create().apply {
+            interval = 15000
+            priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
+        }
+        val settingsRequest = LocationSettingsRequest.Builder()
+            .addLocationRequest(locationRequest)
+            .build()
+
+        val client = LocationServices.getSettingsClient(this)
+        val task = client.checkLocationSettings(settingsRequest)
+
+
+        task.addOnSuccessListener {
+            getLocation()
+        }
+
+        task.addOnFailureListener {
+            task.addOnFailureListener { exception ->
+                if (exception is ResolvableApiException) {
+                    // Location settings are not satisfied, but this can be fixed
+                    // by showing the user a dialog.
+                    try {
+                        // Show the dialog by calling startResolutionForResult(),
+                        // and check the result in onActivityResult().
+                        exception.startResolutionForResult(this, REQUEST_CHECK_SETTINGS)
+                    } catch (sendEx: IntentSender.SendIntentException) {
+                    }
+                }
+            }
+        }
+
+    }
+
     private fun getLocation() {
-        Log.d(TAG, "getLocation: getting location...")
+
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == REQUEST_CHECK_SETTINGS) {
+            when(requestCode) {
+                Activity.RESULT_OK -> {
+                    getLocation()
+                }
+                Activity.RESULT_CANCELED -> {
+                    Toast.makeText(this, "App will not be able to get location weather.",Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+
     }
 
     private fun addObservers() {
