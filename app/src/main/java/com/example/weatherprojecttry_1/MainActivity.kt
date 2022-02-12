@@ -3,6 +3,8 @@ package com.example.weatherprojecttry_1
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.SearchManager
+import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
 import android.content.pm.PackageManager
@@ -18,7 +20,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import com.example.weatherprojecttry_1.data.currentWeather.CurrentWeather
 import com.example.weatherprojecttry_1.data.currentWeather.Location
 import com.example.weatherprojecttry_1.data.currentWeather.MyViewModel
@@ -64,7 +65,19 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.search_menu, menu)
+        val manager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        val searchView = menu?.findItem(R.id.menuItemSearch)?.actionView as SearchView
+        searchView.isIconifiedByDefault = false
+        searchView.setSearchableInfo(manager.getSearchableInfo(componentName))
         return true
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        if (intent?.action == Intent.ACTION_SEARCH) {
+            val query = intent.getStringExtra(SearchManager.QUERY)
+            
+        }
     }
 
     override fun onStart() {
@@ -158,6 +171,7 @@ class MainActivity : AppCompatActivity() {
             showLocationErrorToast()
         }
     }
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
