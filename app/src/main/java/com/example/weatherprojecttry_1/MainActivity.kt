@@ -9,6 +9,7 @@ import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
 import android.view.View
 import android.widget.SearchView
 import android.widget.Toast
@@ -43,12 +44,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()) {
-        if (it) {
+        if (it)
             requestGPS()
-        }
-        else {
+        else
             showLocationErrorToast()
-        }
     }
 
 
@@ -60,7 +59,12 @@ class MainActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this)[MyViewModel::class.java]
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
         addObservers()
-        setSearchViewListener()
+    }
+
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.search_menu, menu)
+        return true
     }
 
     override fun onStart() {
@@ -186,21 +190,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setSearchViewListener() {
-        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                return if (query == null)
-                    false
-                else {
-                    viewModel.fetchLiveData(query)
-                    true
-                }
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean = false
-
-        })
-    }
 
     private fun updateUI(currentWeather: CurrentWeather) {
         binding.textViewCity.text = currentWeather.location.name
