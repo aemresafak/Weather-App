@@ -235,7 +235,8 @@ class MainActivity : AppCompatActivity() {
         binding.textViewHumidity.text = humidityText
         val feelsLikeText = "Feels like ${currentWeather.current.feelslike}°."
         binding.textViewFeelsLike.text = feelsLikeText
-        binding.textViewWindDirection.text = getDirectionFromAbbr(currentWeather.current.windDir)
+        val windDirectionText = "Wind direction is ${getDirectionFromAbbr(currentWeather.current.windDir)}."
+        binding.textViewWindDirection.text = windDirectionText
         val windSpeedText = "Wind speed is ${currentWeather.current.windSpeed} km/h."
         binding.textViewWindSpeed.text = windSpeedText
     }
