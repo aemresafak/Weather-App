@@ -9,6 +9,7 @@ import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -16,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.example.weatherprojecttry_1.data.currentWeather.CurrentWeather
 import com.example.weatherprojecttry_1.data.currentWeather.Location
 import com.example.weatherprojecttry_1.data.currentWeather.MyViewModel
@@ -28,6 +30,8 @@ import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 private const val TAG = "MainActivity"
@@ -134,6 +138,8 @@ class MainActivity : AppCompatActivity() {
 
     @SuppressLint("MissingPermission")
     private fun getLocation() {
+        binding.progressBar.visibility = View.VISIBLE
+        binding.textViewUpdate.visibility = View.VISIBLE
         val task = fusedLocationProviderClient.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY,CancellationTokenSource().token)
         task.addOnSuccessListener {
             if (it == null)
@@ -167,6 +173,10 @@ class MainActivity : AppCompatActivity() {
     private fun addObservers() {
         viewModel.getWeatherLiveData().observe(this) {
             if (it != null) {
+                if (binding.progressBar.visibility == View.VISIBLE)
+                    binding.progressBar.visibility = View.GONE
+                if (binding.textViewUpdate.visibility == View.VISIBLE)
+                    binding.textViewUpdate.visibility = View.GONE
                 updateUI(it)
             }
         }
