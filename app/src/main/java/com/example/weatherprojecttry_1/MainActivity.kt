@@ -76,7 +76,7 @@ class MainActivity : AppCompatActivity() {
         super.onNewIntent(intent)
         if (intent?.action == Intent.ACTION_SEARCH) {
             val query = intent.getStringExtra(SearchManager.QUERY)
-            
+            viewModel.fetchLiveData(query!!)
         }
     }
 
