@@ -4,6 +4,8 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import com.bumptech.glide.Glide
+import com.example.weatherprojecttry_1.MainActivity
 import com.example.weatherprojecttry_1.data.WeatherStackAPI
 import com.example.weatherprojecttry_1.data.currentWeather.CurrentWeather
 import kotlinx.coroutines.GlobalScope
@@ -22,17 +24,16 @@ object Repository {
         .create(WeatherStackAPI::class.java)
 
 
-    suspend fun updateImage(liveData: MutableLiveData<Bitmap?>, url: String) {
-        val response = api.fetchImage(url)
-        liveData.postValue(BitmapFactory.decodeStream(response.body()?.byteStream()))
-    }
-
-    suspend fun updateWeather(liveData: MutableLiveData<CurrentWeather?>, city: String) {
+    suspend fun updateWeather(
+        urlLiveData: MutableLiveData<String?>,
+        weatherLiveData: MutableLiveData<CurrentWeather?>,
+        city: String
+    ) {
         val response = api.fetchCurrentWeather(city)
         if (response.isSuccessful) {
-            liveData.postValue(response.body())
-        }
-        else
+            weatherLiveData.postValue(response.body())
+            urlLiveData.postValue(response.body()?.current?.weatherIcons?.get(0))
+        } else
             Log.d(TAG, "getWeather: error occured.")
 
     }

@@ -11,6 +11,7 @@ import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.os.Bundle
 import android.provider.SearchRecentSuggestions
+import android.util.Log
 import android.view.Menu
 import android.view.View
 import android.widget.SearchView
@@ -20,6 +21,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.example.weatherprojecttry_1.data.RecentQueryProvider
 import com.example.weatherprojecttry_1.data.currentWeather.CurrentWeather
 import com.example.weatherprojecttry_1.data.currentWeather.MyViewModel
@@ -80,8 +83,7 @@ class MainActivity : AppCompatActivity() {
             val query = intent.getStringExtra(SearchManager.QUERY)
             recentSuggestions.saveRecentQuery(query,null)
             viewModel.fetchLiveData(query!!)
-            binding.progressBar.visibility = View.VISIBLE
-            binding.textViewUpdate.visibility = View.VISIBLE
+            showProgressBar()
         }
     }
 
@@ -158,10 +160,11 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+
+
     @SuppressLint("MissingPermission")
     private fun getLocation() {
-        binding.progressBar.visibility = View.VISIBLE
-        binding.textViewUpdate.visibility = View.VISIBLE
+        showProgressBar()
         val task = fusedLocationProviderClient.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY,CancellationTokenSource().token)
         task.addOnSuccessListener {
             if (it == null)
@@ -193,19 +196,33 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+
+    private fun hideProgressBar() {
+        if (binding.progressBar.visibility == View.VISIBLE)
+            binding.progressBar.visibility = View.INVISIBLE
+        if (binding.textViewUpdate.visibility == View.VISIBLE)
+            binding.textViewUpdate.visibility = View.INVISIBLE
+    }
+
+    private fun showProgressBar() {
+        binding.progressBar.visibility = View.VISIBLE
+        binding.textViewUpdate.visibility = View.VISIBLE
+    }
+
     private fun addObservers() {
         viewModel.getWeatherLiveData().observe(this) {
             if (it != null) {
-                if (binding.progressBar.visibility == View.VISIBLE)
-                    binding.progressBar.visibility = View.INVISIBLE
-                if (binding.textViewUpdate.visibility == View.VISIBLE)
-                    binding.textViewUpdate.visibility = View.INVISIBLE
+                hideProgressBar()
                 updateUI(it)
             }
         }
-        viewModel.getLiveDataBitmap().observe(this) {
-            if (it != null)
-                binding.imageView.setImageBitmap(it)
+
+        viewModel.getLiveDataIconUrl().observe(this) {
+            Glide.with(this)
+                .load(it)
+                .fitCenter()
+                .circleCrop()
+                .into(binding.imageView)
         }
     }
 
