@@ -48,8 +48,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var recentSuggestions: SearchRecentSuggestions
     val requestPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()) {
-        if (it)
+        ActivityResultContracts.RequestPermission()) { isGranted ->
+        if (isGranted)
             requestGPS()
         else
             showLocationErrorToast()
@@ -182,8 +182,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == REQUEST_CHECK_SETTINGS) {
-            when(requestCode) {
+        if (requestCode == REQUEST_CHECK_SETTINGS) {
+            when(resultCode) {
                 Activity.RESULT_OK -> {
                     getLocation()
                 }
