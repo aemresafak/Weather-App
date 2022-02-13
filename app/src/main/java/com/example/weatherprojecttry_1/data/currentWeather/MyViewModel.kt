@@ -13,15 +13,13 @@ private const val DEFAULT_URL = "https://assets.weatherstack.com/images/wsymbols
 class MyViewModel : ViewModel() {
     private val mutableLiveDataCurrentWeather = MutableLiveData<CurrentWeather?>()
     fun getWeatherLiveData() : LiveData<CurrentWeather?> = mutableLiveDataCurrentWeather
-    private val mutableLiveDataIconUrl = MutableLiveData<String?>()
-    fun getLiveDataIconUrl() : LiveData<String?> = mutableLiveDataIconUrl
 
 
 
 
      fun fetchLiveData(city: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            Repository.updateWeather(mutableLiveDataIconUrl, mutableLiveDataCurrentWeather, city)
+            mutableLiveDataCurrentWeather.postValue(Repository.fetchWeather(city))
         }
     }
 

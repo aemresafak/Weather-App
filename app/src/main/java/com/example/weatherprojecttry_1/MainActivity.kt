@@ -64,6 +64,7 @@ class MainActivity : AppCompatActivity() {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
         recentSuggestions = SearchRecentSuggestions(this, RecentQueryProvider.AUTHORITY, RecentQueryProvider.MODE)
         addObservers()
+        requestPermission()
     }
 
 
@@ -86,10 +87,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        requestPermission()
-    }
 
 
     private fun requestPermission() {
@@ -164,13 +161,15 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("MissingPermission")
     private fun getLocation() {
         showProgressBar()
-        val task = fusedLocationProviderClient.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY,CancellationTokenSource().token)
+        val task = fusedLocationProviderClient.getCurrentLocation(
+            LocationRequest.PRIORITY_HIGH_ACCURACY,
+            CancellationTokenSource().token
+        )
         task.addOnSuccessListener {
             if (it == null)
                 showLocationErrorToast()
             else {
-                val geocoder = Geocoder(this)
-                val address = geocoder.getFromLocation(it.latitude,it.longitude,1)[0]
+                val address = Geocoder(this).getFromLocation(it.latitude,it.longitude,1)[0]
                 viewModel.fetchLiveData(address.locality ?: address.adminArea)
             }
         }
@@ -213,17 +212,16 @@ class MainActivity : AppCompatActivity() {
             if (it != null) {
                 hideProgressBar()
                 updateUI(it)
+                // update Image View
+                Glide.with(this)
+                    .load(it.current.weatherIcons[0])
+                    .circleCrop()
+                    .into(binding.imageView)
             }
         }
-
-        viewModel.getLiveDataIconUrl().observe(this) {
-            Glide.with(this)
-                .load(it)
-                .fitCenter()
-                .circleCrop()
-                .into(binding.imageView)
-        }
     }
+
+
 
 
     private fun updateUI(currentWeather: CurrentWeather) {
@@ -243,14 +241,14 @@ class MainActivity : AppCompatActivity() {
 
     private fun getDirectionFromAbbr(abbr: String): String {
         return when (abbr) {
-            "N" -> "North"
-            "E" -> "East"
-            "S" -> "South"
-            "W" -> "West"
-            "NW" -> getDirectionFromAbbr("N") + getDirectionFromAbbr("W").lowercase()
-            "NE" -> getDirectionFromAbbr("N") + getDirectionFromAbbr("E").lowercase()
-            "SW" -> getDirectionFromAbbr("S") + getDirectionFromAbbr("W").lowercase()
-            else -> getDirectionFromAbbr("S") + getDirectionFromAbbr("E").lowercase()
+            "N" -> "north"
+            "E" -> "east"
+            "S" -> "south"
+            "W" -> "west"
+            "NW" -> getDirectionFromAbbr("N") + getDirectionFromAbbr("W")
+            "NE" -> getDirectionFromAbbr("N") + getDirectionFromAbbr("E")
+            "SW" -> getDirectionFromAbbr("S") + getDirectionFromAbbr("W")
+            else -> getDirectionFromAbbr("S") + getDirectionFromAbbr("E")
         }
     }
 
