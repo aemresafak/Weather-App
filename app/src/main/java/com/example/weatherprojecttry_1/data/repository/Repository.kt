@@ -24,18 +24,15 @@ object Repository {
         .create(WeatherStackAPI::class.java)
 
 
-    suspend fun updateWeather(
-        urlLiveData: MutableLiveData<String?>,
-        weatherLiveData: MutableLiveData<CurrentWeather?>,
+    suspend fun fetchWeather(
         city: String
-    ) {
+    ): CurrentWeather? {
         val response = api.fetchCurrentWeather(city)
-        if (response.isSuccessful) {
-            weatherLiveData.postValue(response.body())
-            urlLiveData.postValue(response.body()?.current?.weatherIcons?.get(0))
-        } else
-            Log.d(TAG, "getWeather: error occured.")
-
+        return if (response.isSuccessful) {
+            response.body()
+        } else {
+            null
+        }
     }
 
 
