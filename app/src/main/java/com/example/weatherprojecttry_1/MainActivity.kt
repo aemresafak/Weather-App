@@ -33,10 +33,13 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.tasks.CancellationTokenSource
+import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import java.lang.Exception
 
 
 private const val TAG = "MainActivity"
@@ -64,6 +67,7 @@ class MainActivity : AppCompatActivity() {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
         recentSuggestions = SearchRecentSuggestions(this, RecentQueryProvider.AUTHORITY, RecentQueryProvider.MODE)
         addObservers()
+        requestPermission()
     }
 
 
@@ -84,13 +88,30 @@ class MainActivity : AppCompatActivity() {
             viewModel.fetchLiveData(query!!)
             showProgressBar()
         }
+
+
     }
 
-    override fun onStart() {
-        super.onStart()
-        requestPermission()
-    }
 
+
+    private fun showRationaleSnackBar() {
+        Snackbar.make(
+            binding.root,
+            "Permission is needed to display weather info around your location.",
+            BaseTransientBottomBar.LENGTH_LONG
+        ).apply {
+            val callback = object : BaseTransientBottomBar.BaseCallback<Snackbar>() {
+                override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+                    super.onDismissed(transientBottomBar, event)
+                    requestPermissionLauncher.launch(
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                    )
+                }
+            }
+            addCallback(callback)
+            show()
+        }
+    }
 
     private fun requestPermission() {
         when {
@@ -104,22 +125,7 @@ class MainActivity : AppCompatActivity() {
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) -> {
-                Snackbar.make(
-                    binding.root,
-                    "Permission is needed to display weather info around your location.",
-                    BaseTransientBottomBar.LENGTH_LONG
-                ).apply {
-                    val callback = object : BaseTransientBottomBar.BaseCallback<Snackbar>() {
-                        override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
-                            super.onDismissed(transientBottomBar, event)
-                            requestPermissionLauncher.launch(
-                                Manifest.permission.ACCESS_FINE_LOCATION
-                            )
-                        }
-                    }
-                    addCallback(callback)
-                    show()
-                }
+                showRationaleSnackBar()
             }
             else -> requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
         }
@@ -142,35 +148,41 @@ class MainActivity : AppCompatActivity() {
             getLocation()
         }
 
-        task.addOnFailureListener {
-            task.addOnFailureListener { exception ->
-                if (exception is ResolvableApiException) {
-                    // Location settings are not satisfied, but this can be fixed
-                    // by showing the user a dialog.
-                    try {
-                        // Show the dialog by calling startResolutionForResult(),
-                        // and check the result in onActivityResult().
-                        exception.startResolutionForResult(this, REQUEST_CHECK_SETTINGS)
-                    } catch (sendEx: IntentSender.SendIntentException) {
-                    }
-                }
-            }
-        }
+        task.addOnFailureListener(
+            getGPSOnFailureListener()
+        )
+
 
     }
 
+    private fun getGPSOnFailureListener(): OnFailureListener {
+        return OnFailureListener { exception ->
+            if (exception is ResolvableApiException) {
+                // Location settings are not satisfied, but this can be fixed
+                // by showing the user a dialog.
+                try {
+                    // Show the dialog by calling startResolutionForResult(),
+                    // and check the result in onActivityResult().
+                    exception.startResolutionForResult(this@MainActivity, REQUEST_CHECK_SETTINGS)
+                } catch (sendEx: IntentSender.SendIntentException) {
+                }
+            }
+        }
+    }
 
 
     @SuppressLint("MissingPermission")
     private fun getLocation() {
         showProgressBar()
-        val task = fusedLocationProviderClient.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY,CancellationTokenSource().token)
+        val task = fusedLocationProviderClient.getCurrentLocation(
+            LocationRequest.PRIORITY_HIGH_ACCURACY,
+            CancellationTokenSource().token
+        )
         task.addOnSuccessListener {
             if (it == null)
                 showLocationErrorToast()
             else {
-                val geocoder = Geocoder(this)
-                val address = geocoder.getFromLocation(it.latitude,it.longitude,1)[0]
+                val address = Geocoder(this).getFromLocation(it.latitude,it.longitude,1)[0]
                 viewModel.fetchLiveData(address.locality ?: address.adminArea)
             }
         }
@@ -213,17 +225,16 @@ class MainActivity : AppCompatActivity() {
             if (it != null) {
                 hideProgressBar()
                 updateUI(it)
+                // update Image View
+                Glide.with(this)
+                    .load(it.current.weatherIcons[0])
+                    .circleCrop()
+                    .into(binding.imageView)
             }
         }
-
-        viewModel.getLiveDataIconUrl().observe(this) {
-            Glide.with(this)
-                .load(it)
-                .fitCenter()
-                .circleCrop()
-                .into(binding.imageView)
-        }
     }
+
+
 
 
     private fun updateUI(currentWeather: CurrentWeather) {
@@ -243,14 +254,14 @@ class MainActivity : AppCompatActivity() {
 
     private fun getDirectionFromAbbr(abbr: String): String {
         return when (abbr) {
-            "N" -> "North"
-            "E" -> "East"
-            "S" -> "South"
-            "W" -> "West"
-            "NW" -> getDirectionFromAbbr("N") + getDirectionFromAbbr("W").lowercase()
-            "NE" -> getDirectionFromAbbr("N") + getDirectionFromAbbr("E").lowercase()
-            "SW" -> getDirectionFromAbbr("S") + getDirectionFromAbbr("W").lowercase()
-            else -> getDirectionFromAbbr("S") + getDirectionFromAbbr("E").lowercase()
+            "N" -> "north"
+            "E" -> "east"
+            "S" -> "south"
+            "W" -> "west"
+            "NW" -> getDirectionFromAbbr("N") + getDirectionFromAbbr("W")
+            "NE" -> getDirectionFromAbbr("N") + getDirectionFromAbbr("E")
+            "SW" -> getDirectionFromAbbr("S") + getDirectionFromAbbr("W")
+            else -> getDirectionFromAbbr("S") + getDirectionFromAbbr("E")
         }
     }
 
