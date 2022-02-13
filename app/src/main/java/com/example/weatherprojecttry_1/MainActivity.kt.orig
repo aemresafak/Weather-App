@@ -88,8 +88,38 @@ class MainActivity : AppCompatActivity() {
             viewModel.fetchLiveData(query!!)
             showProgressBar()
         }
+
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> afe65f477d78d67ace18c2178fc74d490d080ab8
+
     }
-    
+=======
+>>>>>>> 9060551552d1d6dc566b3011d1dbc6772480bc00
+
+
+
+    private fun showRationaleSnackBar() {
+        Snackbar.make(
+            binding.root,
+            "Permission is needed to display weather info around your location.",
+            BaseTransientBottomBar.LENGTH_LONG
+        ).apply {
+            val callback = object : BaseTransientBottomBar.BaseCallback<Snackbar>() {
+                override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+                    super.onDismissed(transientBottomBar, event)
+                    requestPermissionLauncher.launch(
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                    )
+                }
+            }
+            addCallback(callback)
+            show()
+        }
+    }
+
+
 
 
 
