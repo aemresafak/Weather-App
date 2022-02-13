@@ -89,8 +89,11 @@ class MainActivity : AppCompatActivity() {
             showProgressBar()
         }
 
+<<<<<<< HEAD
 
     }
+=======
+>>>>>>> 9060551552d1d6dc566b3011d1dbc6772480bc00
 
 
 
