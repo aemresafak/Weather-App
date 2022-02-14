@@ -14,7 +14,6 @@ private const val ACCESS_QUERY = "access_key=$ACCESS_KEY"
 interface WeatherStackAPI {
     @GET("current?$ACCESS_QUERY")
     suspend fun fetchCurrentWeather(@Query("query") city: String) : Response<CurrentWeather>
-    @GET
-    suspend fun fetchImage(@Url url: String): Response<ResponseBody>
+
 
 }
