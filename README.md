@@ -1,3 +1,7 @@
 # Weather-App
 My first android project. Created a simple weather app.
-![2022-02-17 11_31_22-Trying Room – MainActivity kt  Trying_Room app](https://user-images.githubusercontent.com/59789023/154436323-c420b692-a967-4187-930c-56b5f1a8a4de.png)
+
+Sample screenshot:
+
+![2022-02-17 11_32_07-Trying Room – MainActivity kt  Trying_Room app]
+(https://user-images.githubusercontent.com/59789023/154436494-0a02acbc-c47e-4e98-9662-9a3ab08c8cd7.png)
