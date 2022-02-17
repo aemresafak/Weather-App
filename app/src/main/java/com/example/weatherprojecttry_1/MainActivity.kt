@@ -11,6 +11,7 @@ import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.os.Bundle
 import android.provider.SearchRecentSuggestions
+import android.util.Log
 import android.view.Menu
 import android.widget.SearchView
 import android.widget.Toast
@@ -18,9 +19,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProvider
 import com.example.weatherprojecttry_1.data.RecentQueryProvider
-import com.example.weatherprojecttry_1.data.currentWeather.MyViewModel
+import com.example.weatherprojecttry_1.data.repository.Repository
 import com.example.weatherprojecttry_1.databinding.ActivityMainBinding
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -33,6 +33,8 @@ import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 
 private const val TAG = "MainActivity"
@@ -40,7 +42,6 @@ private const val REQUEST_CHECK_SETTINGS = 0
 class MainActivity : AppCompatActivity() {
 
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-    private lateinit var viewModel: MyViewModel
     private lateinit var binding: ActivityMainBinding
     private lateinit var recentSuggestions: SearchRecentSuggestions
     val requestPermissionLauncher = registerForActivityResult(
@@ -53,14 +54,21 @@ class MainActivity : AppCompatActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
+
         binding = ActivityMainBinding.inflate(layoutInflater)
+
         setContentView(binding.root)
-        viewModel = ViewModelProvider(this)[MyViewModel::class.java]
+
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+
         recentSuggestions = SearchRecentSuggestions(this, RecentQueryProvider.AUTHORITY, RecentQueryProvider.MODE)
+
         setupPager()
+
         requestPermission()
+
     }
 
     private fun setupPager() {
@@ -90,7 +98,6 @@ class MainActivity : AppCompatActivity() {
         if (intent?.action == Intent.ACTION_SEARCH) {
             val query = intent.getStringExtra(SearchManager.QUERY)
             recentSuggestions.saveRecentQuery(query, null)
-            viewModel.fetchLiveData(query!!)
         }
     }
     
@@ -185,7 +192,6 @@ class MainActivity : AppCompatActivity() {
                 showLocationErrorToast()
             else {
                 val address = Geocoder(this).getFromLocation(it.latitude,it.longitude,1)[0]
-                viewModel.fetchLiveData(address.locality ?: address.adminArea)
             }
         }
         task.addOnFailureListener {

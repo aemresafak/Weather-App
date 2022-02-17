@@ -1,17 +1,15 @@
-package com.example.weatherprojecttry_1.data.currentWeather
+package com.example.weatherprojecttry_1.data.apiresponse
 
 
 import com.google.gson.annotations.SerializedName
 
-data class Current(
+data class CurrentWeather(
     val cloudcover: Int,
     val feelslike: Int,
     val humidity: Int,
-    @SerializedName("is_day")
-    val isDay: String,
     @SerializedName("observation_time")
     val observationTime: String,
-    val precip: Double,
+    val precip: Int,
     val pressure: Int,
     val temperature: Int,
     @SerializedName("uv_index")
