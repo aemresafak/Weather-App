@@ -1,4 +1,4 @@
-package com.example.weatherprojecttry_1.data.db.entities
+package com.example.weatherprojecttry_1.data.models
 
 
 data class Request(

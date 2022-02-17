@@ -1,12 +1,9 @@
-package com.example.weatherprojecttry_1.data.network.apiresponse
+package com.example.weatherprojecttry_1.data.models
 
 
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.weatherprojecttry_1.data.db.entities.CurrentWeather
-import com.example.weatherprojecttry_1.data.db.entities.Location
-import com.example.weatherprojecttry_1.data.db.entities.Request
 import com.google.gson.annotations.SerializedName
 
 @Entity(tableName = "weather")

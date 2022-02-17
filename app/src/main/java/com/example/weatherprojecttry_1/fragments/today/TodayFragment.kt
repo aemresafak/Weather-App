@@ -1,30 +1,31 @@
-package com.example.weatherprojecttry_1.ui.weather.cities
+package com.example.weatherprojecttry_1.fragments.today
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import com.example.weatherprojecttry_1.R
-import com.example.weatherprojecttry_1.databinding.FragmentCitiesBinding
+import com.example.weatherprojecttry_1.databinding.FragmentTodayBinding
+
+private const val TAG = "TodayFragment"
+
+class TodayFragment : Fragment() {
 
 
-class CitiesFragment : Fragment() {
-
-    private var _binding: FragmentCitiesBinding? = null
+    private var _binding: FragmentTodayBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: CitiesViewModel by viewModels()
+    private val viewModel: TodayViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentCitiesBinding.inflate(layoutInflater, container, false)
+        _binding = FragmentTodayBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

@@ -11,7 +11,6 @@ import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.os.Bundle
 import android.provider.SearchRecentSuggestions
-import android.util.Log
 import android.view.Menu
 import android.widget.SearchView
 import android.widget.Toast
@@ -20,8 +19,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.weatherprojecttry_1.data.RecentQueryProvider
-import com.example.weatherprojecttry_1.data.repository.Repository
 import com.example.weatherprojecttry_1.databinding.ActivityMainBinding
+import com.example.weatherprojecttry_1.utils.PagerAdapter
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationRequest
@@ -33,8 +32,6 @@ import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 
 private const val TAG = "MainActivity"

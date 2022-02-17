@@ -1,10 +1,10 @@
-package com.example.weatherprojecttry_1
+package com.example.weatherprojecttry_1.utils
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.example.weatherprojecttry_1.ui.weather.cities.CitiesFragment
-import com.example.weatherprojecttry_1.ui.weather.today.TodayFragment
+import com.example.weatherprojecttry_1.fragments.cities.CitiesFragment
+import com.example.weatherprojecttry_1.fragments.today.TodayFragment
 
 class PagerAdapter(activity: FragmentActivity) : FragmentStateAdapter(activity) {
     override fun getItemCount(): Int = 3
