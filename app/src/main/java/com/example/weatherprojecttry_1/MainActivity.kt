@@ -11,9 +11,7 @@ import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.os.Bundle
 import android.provider.SearchRecentSuggestions
-import android.util.Log
 import android.view.Menu
-import android.view.View
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -21,10 +19,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.example.weatherprojecttry_1.data.RecentQueryProvider
-import com.example.weatherprojecttry_1.data.currentWeather.CurrentWeather
 import com.example.weatherprojecttry_1.data.currentWeather.MyViewModel
 import com.example.weatherprojecttry_1.databinding.ActivityMainBinding
 import com.google.android.gms.common.api.ResolvableApiException
@@ -36,10 +31,8 @@ import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import java.lang.Exception
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 
 
 private const val TAG = "MainActivity"
@@ -66,8 +59,20 @@ class MainActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this)[MyViewModel::class.java]
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
         recentSuggestions = SearchRecentSuggestions(this, RecentQueryProvider.AUTHORITY, RecentQueryProvider.MODE)
-        addObservers()
+        setupPager()
         requestPermission()
+    }
+
+    private fun setupPager() {
+        binding.viewPager2.adapter = PagerAdapter(this)
+        TabLayoutMediator(binding.tabLayout,binding.viewPager2 ) { tab: TabLayout.Tab, i: Int ->
+            tab.text = when (i) {
+                0 -> "First"
+                1 -> "Second"
+                else -> "Third"
+            }
+        }.attach()
+
     }
 
 
@@ -86,7 +91,6 @@ class MainActivity : AppCompatActivity() {
             val query = intent.getStringExtra(SearchManager.QUERY)
             recentSuggestions.saveRecentQuery(query, null)
             viewModel.fetchLiveData(query!!)
-            showProgressBar()
         }
     }
     
@@ -172,7 +176,6 @@ class MainActivity : AppCompatActivity() {
 
     @SuppressLint("MissingPermission")
     private fun getLocation() {
-        showProgressBar()
         val task = fusedLocationProviderClient.getCurrentLocation(
             LocationRequest.PRIORITY_HIGH_ACCURACY,
             CancellationTokenSource().token
@@ -207,66 +210,10 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun hideProgressBar() {
-        if (binding.progressBar.visibility == View.VISIBLE)
-            binding.progressBar.visibility = View.INVISIBLE
-        if (binding.textViewUpdate.visibility == View.VISIBLE)
-            binding.textViewUpdate.visibility = View.INVISIBLE
-    }
-
-    private fun showProgressBar() {
-        binding.progressBar.visibility = View.VISIBLE
-        binding.textViewUpdate.visibility = View.VISIBLE
-    }
-
-    private fun addObservers() {
-        viewModel.getWeatherLiveData().observe(this) {
-            if (it != null) {
-                hideProgressBar()
-                updateUI(it)
-                // update Image View
-                Glide.with(this)
-                    .load(it.current.weatherIcons[0])
-                    .circleCrop()
-                    .into(binding.imageView)
-            }
-        }
-    }
-
-
-
-
-    private fun updateUI(currentWeather: CurrentWeather) {
-        binding.textViewCity.text = currentWeather.location.name
-        binding.textViewCountry.text = currentWeather.location.country
-        val tempText = currentWeather.current.temperature.toString() + "°"
-        binding.textViewTemperature.text = tempText
-        val humidityText = "Humidity is ${currentWeather.current.humidity}."
-        binding.textViewHumidity.text = humidityText
-        val feelsLikeText = "Feels like ${currentWeather.current.feelslike}°."
-        binding.textViewFeelsLike.text = feelsLikeText
-        val windDirectionText = "Wind direction is ${getDirectionFromAbbr(currentWeather.current.windDir)}."
-        binding.textViewWindDirection.text = windDirectionText
-        val windSpeedText = "Wind speed is ${currentWeather.current.windSpeed} km/h."
-        binding.textViewWindSpeed.text = windSpeedText
-    }
-
-    private fun getDirectionFromAbbr(abbr: String): String {
-        return when (abbr) {
-            "N" -> "north"
-            "E" -> "east"
-            "S" -> "south"
-            "W" -> "west"
-            "NW" -> getDirectionFromAbbr("N") + getDirectionFromAbbr("W")
-            "NE" -> getDirectionFromAbbr("N") + getDirectionFromAbbr("E")
-            "SW" -> getDirectionFromAbbr("S") + getDirectionFromAbbr("W")
-            else -> getDirectionFromAbbr("S") + getDirectionFromAbbr("E")
-        }
-    }
-
     private fun showLocationErrorToast() {
         Toast.makeText(this, "Location weather can not be fetched.",Toast.LENGTH_LONG).show()
     }
+
 
 
 
