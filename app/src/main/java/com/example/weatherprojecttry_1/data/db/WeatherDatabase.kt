@@ -4,9 +4,9 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.weatherprojecttry_1.data.models.CurrentWeatherResponse
+import com.example.weatherprojecttry_1.data.network.CurrentWeatherResponse
 
-@Database(entities = [CurrentWeatherResponse::class], version = 1)
+@Database(entities = [WeatherEntity::class], version = 1)
 abstract class WeatherDatabase: RoomDatabase() {
     abstract fun getDao(): WeatherDao
 
@@ -20,7 +20,7 @@ abstract class WeatherDatabase: RoomDatabase() {
         ).build()
 
 
-        private operator fun invoke(context: Context) = instance ?: synchronized(this) {
+        operator fun invoke(context: Context) = instance ?: synchronized(this) {
             instance ?: buildDatabase(context).also { instance = it }
         }
     }

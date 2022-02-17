@@ -1,7 +1,7 @@
 package com.example.weatherprojecttry_1.data.repository
 
 import com.example.weatherprojecttry_1.data.network.WeatherStackAPI
-import com.example.weatherprojecttry_1.data.models.CurrentWeatherResponse
+import com.example.weatherprojecttry_1.data.network.CurrentWeatherResponse
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit

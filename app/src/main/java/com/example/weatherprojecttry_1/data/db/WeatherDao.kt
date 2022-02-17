@@ -2,12 +2,15 @@ package com.example.weatherprojecttry_1.data.db
 
 import androidx.room.Dao
 import androidx.room.Insert
-import com.example.weatherprojecttry_1.data.models.CurrentWeatherResponse
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import com.example.weatherprojecttry_1.data.network.CurrentWeatherResponse
 
 @Dao
 interface WeatherDao {
-    @Insert
-    fun insertWeather(vararg weathers: CurrentWeatherResponse)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertWeather(vararg weathers: WeatherEntity)
 
-
+    @Query("SELECT * FROM weather")
+    fun getAll(): List<WeatherEntity>
 }
