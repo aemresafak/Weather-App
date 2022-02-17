@@ -75,9 +75,9 @@ class MainActivity : AppCompatActivity() {
         binding.viewPager2.adapter = PagerAdapter(this)
         TabLayoutMediator(binding.tabLayout,binding.viewPager2 ) { tab: TabLayout.Tab, i: Int ->
             tab.text = when (i) {
-                0 -> "First"
-                1 -> "Second"
-                else -> "Third"
+                0 -> "Today"
+                1 -> "Cities"
+                else -> "Settings"
             }
         }.attach()
 
