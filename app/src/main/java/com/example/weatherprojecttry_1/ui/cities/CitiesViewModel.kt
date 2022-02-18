@@ -8,11 +8,18 @@ import com.example.weatherprojecttry_1.data.repository.WeatherRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import javax.inject.Singleton
 
 @HiltViewModel
 class CitiesViewModel @Inject constructor(private val repository: WeatherRepository): ViewModel() {
-
     lateinit var liveDataWeatherList: LiveData<List<WeatherEntity>>
+
+
+    fun deleteWeather(weatherEntity: WeatherEntity) {
+        viewModelScope.launch {
+            repository.deleteWeather(weatherEntity)
+        }
+    }
 
     init {
         viewModelScope.launch {

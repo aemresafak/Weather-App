@@ -17,7 +17,8 @@ class TodayViewModel @Inject constructor(private val repository: WeatherReposito
 
     fun fetchCurrentWeather(city: String) {
         viewModelScope.launch {
-            mutableLiveDataCurrentWeather.postValue(repository.fetchDataFromNetwork(city))
+            val weather = repository.fetchDataFromNetwork(city)
+            mutableLiveDataCurrentWeather.postValue(weather)
         }
     }
 

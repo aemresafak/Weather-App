@@ -17,7 +17,11 @@ class WeatherRepository @Inject constructor(
         dao.insertWeather(weather)
     }
 
-    suspend fun loadAllWeathers(): LiveData<List<WeatherEntity>> = dao.getAllWeathers()
+    fun loadAllWeathers(): LiveData<List<WeatherEntity>> = dao.getAllWeathers()
+
+    suspend fun deleteWeather(weather: WeatherEntity) {
+        dao.deleteWeather(weather)
+    }
 
     suspend fun fetchDataFromNetwork(city: String): WeatherEntity? {
         val weather = weatherNetworkDataSource.fetchWeather(city)
