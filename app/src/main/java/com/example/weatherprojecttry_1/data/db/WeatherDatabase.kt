@@ -9,19 +9,4 @@ import com.example.weatherprojecttry_1.data.network.CurrentWeatherResponse
 @Database(entities = [WeatherEntity::class], version = 1)
 abstract class WeatherDatabase: RoomDatabase() {
     abstract fun getDao(): WeatherDao
-
-    companion object {
-        @Volatile
-        var instance: WeatherDatabase? = null
-        private fun buildDatabase(context: Context) = Room.databaseBuilder(
-            context.applicationContext,
-            WeatherDatabase::class.java,
-            "weather.db"
-        ).build()
-
-
-        operator fun invoke(context: Context) = instance ?: synchronized(this) {
-            instance ?: buildDatabase(context).also { instance = it }
-        }
-    }
 }

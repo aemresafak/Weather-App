@@ -7,9 +7,10 @@ import javax.inject.Inject
 private const val TAG = "WeatherNetworkDataSourc"
 class WeatherNetworkDataSource @Inject constructor(private val api: WeatherStackAPI) {
 
-    suspend fun fetchWeather(city: String): CurrentWeatherResponse?{
+    suspend fun fetchWeather(city: String): CurrentWeatherResponse? {
         return try {
-            api.fetchCurrentWeather(city).body()
+            val response = api.fetchCurrentWeather(city)
+            response.body()
         } catch (e: NoConnectionException) {
             Log.d(TAG, "fetchWeather: no connection")
             null

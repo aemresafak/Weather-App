@@ -9,6 +9,6 @@ import com.example.weatherprojecttry_1.data.network.CurrentWeatherResponse
 @Dao
 interface WeatherDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertWeather(vararg weathers: WeatherEntity)
+    suspend fun insertWeather(vararg weathers: WeatherEntity)
 
 }

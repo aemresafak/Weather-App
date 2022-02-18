@@ -13,7 +13,7 @@ import retrofit2.http.Query
 interface WeatherStackAPI {
 
     @GET("current")
-    suspend fun fetchCurrentWeather(@Query("query") city: String) : Response<CurrentWeatherResponse>
+    suspend fun fetchCurrentWeather(@Query("query") city: String) : Response<CurrentWeatherResponse?>
 
     companion object {
         fun instantiate(
