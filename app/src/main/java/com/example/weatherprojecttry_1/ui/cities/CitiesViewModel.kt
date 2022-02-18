@@ -1,4 +1,4 @@
-package com.example.weatherprojecttry_1.fragments.cities
+package com.example.weatherprojecttry_1.ui.cities
 
 import androidx.lifecycle.ViewModel
 

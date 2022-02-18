@@ -1,4 +1,4 @@
-package com.example.weatherprojecttry_1.fragments.cities
+package com.example.weatherprojecttry_1.ui.cities
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,8 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import com.example.weatherprojecttry_1.databinding.FragmentCitiesBinding
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class CitiesFragment : Fragment() {
 
     private var _binding: FragmentCitiesBinding? = null
@@ -22,6 +23,11 @@ class CitiesFragment : Fragment() {
     ): View? {
         _binding = FragmentCitiesBinding.inflate(layoutInflater, container, false)
         return binding.root
+    }
+
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
     }
 
     override fun onDestroyView() {
