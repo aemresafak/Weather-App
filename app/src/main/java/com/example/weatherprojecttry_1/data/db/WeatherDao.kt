@@ -11,6 +11,4 @@ interface WeatherDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertWeather(vararg weathers: WeatherEntity)
 
-    @Query("SELECT * FROM weather")
-    fun getAll(): List<WeatherEntity>
 }

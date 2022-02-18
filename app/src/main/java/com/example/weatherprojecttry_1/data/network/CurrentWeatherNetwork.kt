@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName
 data class CurrentWeatherNetwork(
     val feelslike: Int,
     val humidity: Int,
-    val precip: Int,
+    val precip: Double,
     val pressure: Int,
     val temperature: Int,
     val visibility: Int,

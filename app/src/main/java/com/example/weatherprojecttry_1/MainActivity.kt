@@ -20,8 +20,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.weatherprojecttry_1.data.RecentQueryProvider
-import com.example.weatherprojecttry_1.data.db.WeatherDatabase
-import com.example.weatherprojecttry_1.data.repository.Repository
 import com.example.weatherprojecttry_1.databinding.ActivityMainBinding
 import com.example.weatherprojecttry_1.utils.PagerAdapter
 import com.google.android.gms.common.api.ResolvableApiException
@@ -35,12 +33,14 @@ import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 
 private const val TAG = "MainActivity"
 private const val REQUEST_CHECK_SETTINGS = 0
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient

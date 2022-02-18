@@ -9,7 +9,6 @@ import androidx.fragment.app.viewModels
 import com.example.weatherprojecttry_1.databinding.FragmentCitiesBinding
 import dagger.hilt.android.AndroidEntryPoint
 
-@AndroidEntryPoint
 class CitiesFragment : Fragment() {
 
     private var _binding: FragmentCitiesBinding? = null
@@ -26,9 +25,6 @@ class CitiesFragment : Fragment() {
     }
 
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-    }
 
     override fun onDestroyView() {
         super.onDestroyView()
