@@ -17,6 +17,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
+import com.bumptech.glide.Glide
 import com.example.weatherprojecttry_1.MainActivity
 import com.example.weatherprojecttry_1.data.db.WeatherEntity
 import com.example.weatherprojecttry_1.databinding.FragmentTodayBinding
@@ -219,7 +220,7 @@ class TodayFragment : Fragment() {
 
 
     /**
-     * Updates the UI with the fetched weather
+     * Updates the UI with the information from fetched weather
      */
     private fun updateUI(weatherEntity: WeatherEntity) {
         binding.apply {
@@ -238,6 +239,10 @@ class TodayFragment : Fragment() {
             textViewWindDirection.text = windDirectionText
             val windSpeedText = "Wind speed is ${weatherEntity.currentWeather.windSpeed} km/h."
             textViewWindSpeed.text = windSpeedText
+            Glide.with(requireContext())
+                .load(weatherEntity.currentWeather.weatherIcon)
+                .circleCrop()
+                .into(imageView)
         }
     }
     private fun getDirectionFromAbbr(abbr: String): String {
