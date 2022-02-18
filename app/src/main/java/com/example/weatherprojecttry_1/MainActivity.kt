@@ -16,11 +16,13 @@ import android.view.Menu
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.weatherprojecttry_1.data.RecentQueryProvider
 import com.example.weatherprojecttry_1.databinding.ActivityMainBinding
+import com.example.weatherprojecttry_1.ui.today.TodayViewModel
 import com.example.weatherprojecttry_1.utils.PagerAdapter
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -46,6 +48,7 @@ class MainActivity : AppCompatActivity() {
     @Inject lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var binding: ActivityMainBinding
     @Inject lateinit var recentSuggestions: SearchRecentSuggestions
+    private val todayViewModel: TodayViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,6 +90,7 @@ class MainActivity : AppCompatActivity() {
         if (intent?.action == Intent.ACTION_SEARCH) {
             val query = intent.getStringExtra(SearchManager.QUERY)
             recentSuggestions.saveRecentQuery(query, null)
+            todayViewModel.fetchCurrentWeather(query!!)
         }
     }
 }

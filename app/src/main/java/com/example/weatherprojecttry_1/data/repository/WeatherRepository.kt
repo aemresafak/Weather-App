@@ -14,11 +14,12 @@ class WeatherRepository @Inject constructor(
         dao.insertWeather(weather)
     }
 
-    suspend fun fetchDataFromNetwork(city: String) {
+    suspend fun fetchDataFromNetwork(city: String): WeatherEntity? {
         val weather = weatherNetworkDataSource.fetchWeather(city)
         if (weather != null) {
             saveToDatabase(weather.toWeatherEntity())
         }
+        return weather?.toWeatherEntity()
     }
 
 }

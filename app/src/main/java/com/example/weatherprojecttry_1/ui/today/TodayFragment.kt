@@ -3,12 +3,10 @@ package com.example.weatherprojecttry_1.ui.today
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.Intent
 import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -18,8 +16,9 @@ import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import com.example.weatherprojecttry_1.MainActivity
+import com.example.weatherprojecttry_1.data.db.WeatherEntity
 import com.example.weatherprojecttry_1.databinding.FragmentTodayBinding
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.LocationRequest
@@ -30,12 +29,8 @@ import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 private const val TAG = "TodayFragment"
-private const val REQUEST_CHECK_SETTINGS = 0
 @AndroidEntryPoint
 class TodayFragment : Fragment() {
 
@@ -62,7 +57,7 @@ class TodayFragment : Fragment() {
                 showLocationErrorToast()
             }
         }
-    private val viewModel: TodayViewModel by viewModels()
+    private val viewModel: TodayViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -76,6 +71,15 @@ class TodayFragment : Fragment() {
         super.onCreate(savedInstanceState)
         requestPermission()
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel.getLiveDataCurrentWeather().observe(viewLifecycleOwner) {
+            if (it != null)
+                updateUI(it)
+        }
+    }
+
 
     /**
      * Helper method that shows a snackbar that
@@ -186,17 +190,69 @@ class TodayFragment : Fragment() {
             LocationRequest.PRIORITY_HIGH_ACCURACY,
             CancellationTokenSource().token
         )
+        showProgress()
         task.addOnSuccessListener {
             if (it == null)
                 showLocationErrorToast()
             else {
                 val address = Geocoder(context).getFromLocation(it.latitude, it.longitude, 1)[0]
+                viewModel.fetchCurrentWeather(address.locality ?: address.adminArea)
             }
         }
         task.addOnFailureListener {
             showLocationErrorToast()
+            binding.progressBar.visibility = View.INVISIBLE
+            binding.textViewUpdate.visibility = View.INVISIBLE
         }
     }
+
+    /**
+     * utility method that shows a progress bar
+     */
+    private fun showProgress() {
+        binding.apply {
+            progressBar.visibility = View.VISIBLE
+            textViewUpdate.visibility = View.VISIBLE
+        }
+
+    }
+
+
+    /**
+     * Updates the UI with the fetched weather
+     */
+    private fun updateUI(weatherEntity: WeatherEntity) {
+        binding.apply {
+            progressBar.visibility = View.INVISIBLE
+            textViewUpdate.visibility = View.INVISIBLE
+            textViewCity.text = weatherEntity.location.name
+            textViewCountry.text = weatherEntity.location.country
+            val tempText = weatherEntity.currentWeather.temperature.toString() + "°"
+            textViewTemperature.text = tempText
+            val humidityText = "Humidity is ${weatherEntity.currentWeather.humidity}."
+            textViewHumidity.text = humidityText
+            val feelsLikeText = "Feels like ${weatherEntity.currentWeather.feelslike}°."
+            textViewFeelsLike.text = feelsLikeText
+            val windDirectionText =
+                "Wind direction is ${getDirectionFromAbbr(weatherEntity.currentWeather.windDir)}."
+            textViewWindDirection.text = windDirectionText
+            val windSpeedText = "Wind speed is ${weatherEntity.currentWeather.windSpeed} km/h."
+            textViewWindSpeed.text = windSpeedText
+        }
+    }
+    private fun getDirectionFromAbbr(abbr: String): String {
+        return when (abbr) {
+            "N" -> "north"
+            "E" -> "east"
+            "S" -> "south"
+            "W" -> "west"
+            "NW" -> "northwest"
+            "NE" -> "northeast"
+            "SW" -> "southwest"
+            else -> "southeast"
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
