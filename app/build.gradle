@@ -46,7 +46,9 @@ dependencies {
 
     def roomVersion = "2.4.1"
 
+    // room
     implementation("androidx.room:room-runtime:$roomVersion")
+    implementation("androidx.room:room-ktx:$roomVersion")
     kapt("androidx.room:room-compiler:$roomVersion")
 
     // dagger
