@@ -1,5 +1,6 @@
 package com.example.weatherprojecttry_1.data.db
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -10,5 +11,8 @@ import com.example.weatherprojecttry_1.data.network.CurrentWeatherResponse
 interface WeatherDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertWeather(vararg weathers: WeatherEntity)
+
+    @Query("SELECT * from WEATHER")
+    fun getAllWeathers(): LiveData<List<WeatherEntity>>
 
 }
