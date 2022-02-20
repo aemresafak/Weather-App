@@ -5,12 +5,17 @@
       <map>
         <entry key="..\:/Users/aesh/AndroidStudioProjects/WeatherProjectTry1/app/src/main/res/drawable/gradient.xml" value="0.221" />
         <entry key="..\:/Users/aesh/AndroidStudioProjects/WeatherProjectTry1/app/src/main/res/drawable/shape.xml" value="0.125" />
-        <entry key="..\:/Users/aesh/AndroidStudioProjects/WeatherProjectTry1/app/src/main/res/layout/activity_main.xml" value="0.264" />
+        <entry key="..\:/Users/aesh/AndroidStudioProjects/WeatherProjectTry1/app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="..\:/Users/aesh/AndroidStudioProjects/WeatherProjectTry1/app/src/main/res/layout/blank_fragment.xml" value="0.20863616930312098" />
         <entry key="..\:/Users/aesh/AndroidStudioProjects/WeatherProjectTry1/app/src/main/res/layout/fragment_about.xml" value="0.20878623188405798" />
+        <entry key="..\:/Users/aesh/AndroidStudioProjects/WeatherProjectTry1/app/src/main/res/layout/fragment_blank.xml" value="0.20863616930312098" />
+        <entry key="..\:/Users/aesh/AndroidStudioProjects/WeatherProjectTry1/app/src/main/res/layout/fragment_cities.xml" value="0.20863616930312098" />
+        <entry key="..\:/Users/aesh/AndroidStudioProjects/WeatherProjectTry1/app/src/main/res/layout/fragment_city_detail.xml" value="0.19709277469003847" />
         <entry key="..\:/Users/aesh/AndroidStudioProjects/WeatherProjectTry1/app/src/main/res/layout/fragment_search.xml" value="0.20878623188405798" />
         <entry key="..\:/Users/aesh/AndroidStudioProjects/WeatherProjectTry1/app/src/main/res/layout/fragment_settings.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/aesh/AndroidStudioProjects/WeatherProjectTry1/app/src/main/res/layout/fragment_today.xml" value="0.21875" />
         <entry key="..\:/Users/aesh/AndroidStudioProjects/WeatherProjectTry1/app/src/main/res/layout/fragment_week.xml" value="0.21875" />
+        <entry key="..\:/Users/aesh/AndroidStudioProjects/WeatherProjectTry1/app/src/main/res/layout/recycler_view_item.xml" value="0.20863616930312098" />
         <entry key="..\:/Users/aesh/AndroidStudioProjects/WeatherProjectTry1/app/src/main/res/menu/bottom_nav_menu.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/aesh/AndroidStudioProjects/WeatherProjectTry1/app/src/main/res/menu/search_menu.xml" value="0.20863616930312098" />
         <entry key="..\:/Users/aesh/AndroidStudioProjects/WeatherProjectTry1/app/src/main/res/xml/searchable_config.xml" value="0.20863616930312098" />
