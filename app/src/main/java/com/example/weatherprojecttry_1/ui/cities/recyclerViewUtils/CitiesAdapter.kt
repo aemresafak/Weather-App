@@ -1,6 +1,7 @@
-package com.example.weatherprojecttry_1.ui.cities
+package com.example.weatherprojecttry_1.ui.cities.recyclerViewUtils
 
 import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,8 +14,8 @@ import com.example.weatherprojecttry_1.databinding.RecyclerViewItemBinding
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton
-class CitiesAdapter @Inject constructor(): RecyclerView.Adapter<CitiesAdapter.CitiesViewHolder>() {
+
+class CitiesAdapter(val clickHandler: ItemClickHandler): RecyclerView.Adapter<CitiesAdapter.CitiesViewHolder>() {
     var weathers: List<WeatherEntity> = arrayListOf()
         set(value) {
             val diffUtil = DiffUtilWeatherList(field, value)
@@ -24,6 +25,11 @@ class CitiesAdapter @Inject constructor(): RecyclerView.Adapter<CitiesAdapter.Ci
         }
     inner class CitiesViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val binding = RecyclerViewItemBinding.bind(view)
+        init {
+            view.setOnClickListener {
+                clickHandler.handleClick(weathers[adapterPosition])
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CitiesViewHolder {
@@ -47,4 +53,8 @@ class CitiesAdapter @Inject constructor(): RecyclerView.Adapter<CitiesAdapter.Ci
     }
 
     override fun getItemCount(): Int = weathers.count()
+
+    interface ItemClickHandler {
+        fun handleClick(weatherEntity: WeatherEntity)
+    }
 }

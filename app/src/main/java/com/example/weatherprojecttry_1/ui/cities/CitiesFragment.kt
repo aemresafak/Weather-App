@@ -5,26 +5,29 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.weatherprojecttry_1.data.db.WeatherEntity
 import com.example.weatherprojecttry_1.databinding.FragmentCitiesBinding
+import com.example.weatherprojecttry_1.ui.cities.recyclerViewUtils.CitiesAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class CitiesFragment : Fragment() {
+class CitiesFragment : Fragment(), CitiesAdapter.ItemClickHandler {
 
     private var _binding: FragmentCitiesBinding? = null
     private val binding get() = _binding!!
 
-    @Inject
-    lateinit var adapter: CitiesAdapter
+
+    val adapter = CitiesAdapter(this)
 
     @Inject
     lateinit var layoutManager: LinearLayoutManager
-    private val viewModel: CitiesViewModel by viewModels()
+    private val viewModel: CitiesViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,7 +38,7 @@ class CitiesFragment : Fragment() {
     }
 
 
-    fun setupDeleteOnSwipe() {
+    private fun setupDeleteOnSwipe() {
         val callback = object :
             ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
             override fun onMove(
@@ -64,5 +67,9 @@ class CitiesFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun handleClick(weatherEntity: WeatherEntity) {
+        viewModel.mutableLiveDataClickedWeather.value = weatherEntity
     }
 }

@@ -78,6 +78,12 @@ class TodayFragment : Fragment() {
         viewModel.getLiveDataCurrentWeather().observe(viewLifecycleOwner) {
             if (it != null)
                 updateUI(it)
+            else {
+                binding.apply {
+                    textViewUpdate.visibility = View.INVISIBLE
+                    progressBar.visibility = View.INVISIBLE
+                }
+            }
         }
     }
 

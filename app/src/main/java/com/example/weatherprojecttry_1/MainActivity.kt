@@ -22,6 +22,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.weatherprojecttry_1.data.RecentQueryProvider
 import com.example.weatherprojecttry_1.databinding.ActivityMainBinding
+import com.example.weatherprojecttry_1.ui.cities.CitiesViewModel
 import com.example.weatherprojecttry_1.ui.today.TodayViewModel
 import com.example.weatherprojecttry_1.utils.PagerAdapter
 import com.google.android.gms.common.api.ResolvableApiException
@@ -49,6 +50,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     @Inject lateinit var recentSuggestions: SearchRecentSuggestions
     private val todayViewModel: TodayViewModel by viewModels()
+    private val citiesViewModel: CitiesViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,6 +61,9 @@ class MainActivity : AppCompatActivity() {
 
         setupPager()
 
+        citiesViewModel.mutableLiveDataClickedWeather.observe(this) {
+            binding.viewPager2.setCurrentItem(2, true)
+        }
 
     }
 
@@ -69,7 +74,7 @@ class MainActivity : AppCompatActivity() {
             tab.text = when (i) {
                 0 -> "Today"
                 1 -> "Cities"
-                else -> "Settings"
+                else -> "City Details"
             }
         }.attach()
 
