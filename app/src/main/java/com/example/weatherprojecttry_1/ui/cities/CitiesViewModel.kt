@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CitiesViewModel @Inject constructor(private val repository: WeatherRepository): ViewModel() {
-    lateinit var liveDataWeatherList: LiveData<List<WeatherEntity>>
+    val liveDataWeatherList: LiveData<List<WeatherEntity>> = repository.loadAllWeathers()
 
     val mutableLiveDataClickedWeather = MutableLiveData<WeatherEntity?>()
 
@@ -20,12 +20,6 @@ class CitiesViewModel @Inject constructor(private val repository: WeatherReposit
     fun deleteWeather(weatherEntity: WeatherEntity) {
         viewModelScope.launch {
             repository.deleteWeather(weatherEntity)
-        }
-    }
-
-    init {
-        viewModelScope.launch {
-            liveDataWeatherList = repository.loadAllWeathers()
         }
     }
 

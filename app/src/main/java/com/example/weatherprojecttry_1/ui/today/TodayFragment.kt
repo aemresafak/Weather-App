@@ -204,10 +204,11 @@ class TodayFragment : WeatherFragment() {
     /**
      * utility method that shows a progress bar
      */
-    private fun showProgress() {
+    fun showProgress() {
         binding.apply {
             progressBar.visibility = View.VISIBLE
             textViewUpdate.visibility = View.VISIBLE
         }
     }
+
 }
