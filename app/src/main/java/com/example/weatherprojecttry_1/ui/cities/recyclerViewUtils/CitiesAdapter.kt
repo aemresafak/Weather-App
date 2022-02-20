@@ -1,7 +1,6 @@
 package com.example.weatherprojecttry_1.ui.cities.recyclerViewUtils
 
 import android.graphics.Color
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,8 +10,7 @@ import com.bumptech.glide.Glide
 import com.example.weatherprojecttry_1.R
 import com.example.weatherprojecttry_1.data.db.WeatherEntity
 import com.example.weatherprojecttry_1.databinding.RecyclerViewItemBinding
-import javax.inject.Inject
-import javax.inject.Singleton
+
 
 
 class CitiesAdapter(val clickHandler: ItemClickHandler): RecyclerView.Adapter<CitiesAdapter.CitiesViewHolder>() {
@@ -45,6 +43,8 @@ class CitiesAdapter(val clickHandler: ItemClickHandler): RecyclerView.Adapter<Ci
             textViewTemperatureItem.text = weatherEntity.currentWeather.temperature.toString()
             if (holder.layoutPosition % 2 == 0)
                 cardView.setCardBackgroundColor(Color.LTGRAY)
+            else
+                cardView.setCardBackgroundColor(Color.WHITE)
             Glide.with(imageViewItem.context)
                 .load(weatherEntity.currentWeather.weatherIcon)
                 .circleCrop()

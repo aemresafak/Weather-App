@@ -16,7 +16,7 @@ import okhttp3.Response
  * else it proceeds the current request.
  */
 class ConnectivityInterceptor(context: Context): Interceptor {
-    val appContext: Context = context.applicationContext
+    private val appContext: Context = context.applicationContext
 
     override fun intercept(chain: Interceptor.Chain): Response {
         if (!isOnline()) {
