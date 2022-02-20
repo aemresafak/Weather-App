@@ -2,7 +2,7 @@ package com.example.weatherprojecttry_1.data.db
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.example.weatherprojecttry_1.data.network.CurrentWeatherResponse
+import com.example.weatherprojecttry_1.data.db.models.WeatherEntity
 
 @Dao
 interface WeatherDao {

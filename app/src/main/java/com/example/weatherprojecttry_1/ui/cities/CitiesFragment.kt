@@ -6,11 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.weatherprojecttry_1.data.db.WeatherEntity
+import com.example.weatherprojecttry_1.data.db.models.WeatherEntity
 import com.example.weatherprojecttry_1.databinding.FragmentCitiesBinding
 import com.example.weatherprojecttry_1.ui.cities.recyclerViewUtils.CitiesAdapter
 import dagger.hilt.android.AndroidEntryPoint

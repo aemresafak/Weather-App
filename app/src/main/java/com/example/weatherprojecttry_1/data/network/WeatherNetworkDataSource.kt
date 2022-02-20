@@ -1,8 +1,8 @@
 package com.example.weatherprojecttry_1.data.network
 
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
+import com.example.weatherprojecttry_1.data.network.models.CurrentWeatherResponse
 import com.example.weatherprojecttry_1.utils.NoConnectionException
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject

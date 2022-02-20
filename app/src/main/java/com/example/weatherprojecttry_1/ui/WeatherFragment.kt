@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.example.weatherprojecttry_1.R
-import com.example.weatherprojecttry_1.data.db.WeatherEntity
+import com.example.weatherprojecttry_1.data.db.models.WeatherEntity
 import com.example.weatherprojecttry_1.databinding.FragmentWeatherBinding
 import com.example.weatherprojecttry_1.utils.getDirectionFromAbbr
 

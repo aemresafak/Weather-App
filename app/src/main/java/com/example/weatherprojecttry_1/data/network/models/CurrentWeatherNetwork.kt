@@ -1,9 +1,7 @@
-package com.example.weatherprojecttry_1.data.network
+package com.example.weatherprojecttry_1.data.network.models
 
 
-import androidx.room.ColumnInfo
-import androidx.room.Ignore
-import com.example.weatherprojecttry_1.data.db.CurrentWeather
+import com.example.weatherprojecttry_1.data.db.models.CurrentWeather
 import com.google.gson.annotations.SerializedName
 
 data class CurrentWeatherNetwork(

@@ -1,6 +1,6 @@
 package com.example.weatherprojecttry_1.data.network
 
-import com.example.weatherprojecttry_1.data.network.interceptors.ConnectivityInterceptor
+import com.example.weatherprojecttry_1.data.network.models.CurrentWeatherResponse
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Response

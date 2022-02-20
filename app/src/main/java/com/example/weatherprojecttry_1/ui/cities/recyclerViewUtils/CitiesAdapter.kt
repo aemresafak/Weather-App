@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.weatherprojecttry_1.R
-import com.example.weatherprojecttry_1.data.db.WeatherEntity
+import com.example.weatherprojecttry_1.data.db.models.WeatherEntity
 import com.example.weatherprojecttry_1.databinding.RecyclerViewItemBinding
 
 
