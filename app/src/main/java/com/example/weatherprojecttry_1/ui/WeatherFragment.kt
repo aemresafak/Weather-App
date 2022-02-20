@@ -1,49 +1,47 @@
-package com.example.weatherprojecttry_1.ui.cities.citydetail
+package com.example.weatherprojecttry_1.ui
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.example.weatherprojecttry_1.R
 import com.example.weatherprojecttry_1.data.db.WeatherEntity
-import com.example.weatherprojecttry_1.databinding.FragmentCityDetailBinding
-import com.example.weatherprojecttry_1.ui.cities.CitiesViewModel
+import com.example.weatherprojecttry_1.databinding.FragmentWeatherBinding
 import com.example.weatherprojecttry_1.utils.getDirectionFromAbbr
 
-class CityDetailFragment : Fragment() {
-
-    private var _binding: FragmentCityDetailBinding? = null
-    private val binding get() = _binding!!
-
-    private val viewModel: CitiesViewModel by activityViewModels()
+/**
+ * Base fragment that has the fragment weather layout
+ * This fragment is created in order to reduce boilerplate code
+ * that TodayFragments and DetailFragments share
+ */
+open class WeatherFragment : Fragment() {
+    private var _binding: FragmentWeatherBinding? = null
+    protected val binding get() = _binding!!
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentCityDetailBinding.inflate(layoutInflater, container, false)
+        _binding = FragmentWeatherBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        viewModel.mutableLiveDataClickedWeather.observe(viewLifecycleOwner) {
-            if (it != null) {
-                updateUI(it)
-            }
-        }
-
-    }
-
-    private fun updateUI(weatherEntity: WeatherEntity) {
+    /**
+     * Updates the UI with the information from fetched weather
+     */
+    protected fun updateUI(weatherEntity: WeatherEntity) {
         binding.apply {
             progressBar.visibility = View.INVISIBLE
+
             textViewUpdate.visibility = View.INVISIBLE
+
             textViewCity.text = weatherEntity.location.name
+
             textViewCountry.text = weatherEntity.location.country
+
             weatherEntity.currentWeather.apply {
 
                 textViewTemperature.text = getString(R.string.temperature, temperature)
@@ -53,11 +51,15 @@ class CityDetailFragment : Fragment() {
                 textViewFeelsLike.text = getString(R.string.feelslike, feelslike)
 
                 textViewWindDirection.text =
-                    getString(R.string.windDirection, getDirectionFromAbbr(this@CityDetailFragment.requireContext(),windDir))
+                    getString(
+                        R.string.windDirection,
+                        getDirectionFromAbbr(this@WeatherFragment.requireContext(), windDir)
+                    )
 
                 textViewWindSpeed.text = getString(R.string.windSpeed, windSpeed)
             }
         }
+
         Glide.with(requireContext())
             .load(weatherEntity.currentWeather.weatherIcon)
             .circleCrop()
@@ -68,4 +70,5 @@ class CityDetailFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
 }

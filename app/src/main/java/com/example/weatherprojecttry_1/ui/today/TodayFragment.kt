@@ -7,22 +7,15 @@ import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
-import com.bumptech.glide.Glide
 import com.example.weatherprojecttry_1.MainActivity
-import com.example.weatherprojecttry_1.R
-import com.example.weatherprojecttry_1.data.db.WeatherEntity
-import com.example.weatherprojecttry_1.databinding.FragmentTodayBinding
-import com.example.weatherprojecttry_1.utils.getDirectionFromAbbr
+import com.example.weatherprojecttry_1.ui.WeatherFragment
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
@@ -36,10 +29,8 @@ import dagger.hilt.android.AndroidEntryPoint
 private const val TAG = "TodayFragment"
 
 @AndroidEntryPoint
-class TodayFragment : Fragment() {
+class TodayFragment : WeatherFragment() {
 
-    private var _binding: FragmentTodayBinding? = null
-    private val binding get() = _binding!!
 
     val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -63,13 +54,6 @@ class TodayFragment : Fragment() {
         }
     private val viewModel: TodayViewModel by activityViewModels()
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentTodayBinding.inflate(layoutInflater, container, false)
-        return binding.root
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -224,50 +208,5 @@ class TodayFragment : Fragment() {
             progressBar.visibility = View.VISIBLE
             textViewUpdate.visibility = View.VISIBLE
         }
-
-    }
-
-
-    /**
-     * Updates the UI with the information from fetched weather
-     */
-    private fun updateUI(weatherEntity: WeatherEntity) {
-        binding.apply {
-            progressBar.visibility = View.INVISIBLE
-
-            textViewUpdate.visibility = View.INVISIBLE
-
-            textViewCity.text = weatherEntity.location.name
-
-            textViewCountry.text = weatherEntity.location.country
-
-            weatherEntity.currentWeather.apply {
-
-                textViewTemperature.text = getString(R.string.temperature, temperature)
-
-                textViewHumidity.text = getString(R.string.humidity, humidity)
-
-                textViewFeelsLike.text = getString(R.string.feelslike, feelslike)
-
-                textViewWindDirection.text =
-                    getString(
-                        R.string.windDirection,
-                        getDirectionFromAbbr(this@TodayFragment.requireContext(), windDir)
-                    )
-
-                textViewWindSpeed.text = getString(R.string.windSpeed, windSpeed)
-            }
-        }
-
-        Glide.with(requireContext())
-            .load(weatherEntity.currentWeather.weatherIcon)
-            .circleCrop()
-            .into(binding.imageView)
-    }
-
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }
