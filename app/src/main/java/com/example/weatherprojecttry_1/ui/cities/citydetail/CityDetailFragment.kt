@@ -11,13 +11,14 @@ import com.example.weatherprojecttry_1.R
 import com.example.weatherprojecttry_1.data.db.WeatherEntity
 import com.example.weatherprojecttry_1.databinding.FragmentCityDetailBinding
 import com.example.weatherprojecttry_1.ui.cities.CitiesViewModel
+import com.example.weatherprojecttry_1.utils.getDirectionFromAbbr
 
 class CityDetailFragment : Fragment() {
 
     private var _binding: FragmentCityDetailBinding? = null
     private val binding get() = _binding!!
 
-    val viewModel: CitiesViewModel by activityViewModels()
+    private val viewModel: CitiesViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,38 +42,26 @@ class CityDetailFragment : Fragment() {
         binding.apply {
             progressBar.visibility = View.INVISIBLE
             textViewUpdate.visibility = View.INVISIBLE
-            textViewMoreInfo.text = "More info: "
             textViewCity.text = weatherEntity.location.name
             textViewCountry.text = weatherEntity.location.country
-            val tempText = weatherEntity.currentWeather.temperature.toString() + "°"
-            textViewTemperature.text = tempText
-            val humidityText = "Humidity is ${weatherEntity.currentWeather.humidity}."
-            textViewHumidity.text = humidityText
-            val feelsLikeText = "Feels like ${weatherEntity.currentWeather.feelslike}°."
-            textViewFeelsLike.text = feelsLikeText
-            val windDirectionText =
-                "Wind direction is ${getDirectionFromAbbr(weatherEntity.currentWeather.windDir)}."
-            textViewWindDirection.text = windDirectionText
-            val windSpeedText = "Wind speed is ${weatherEntity.currentWeather.windSpeed} km/h."
-            textViewWindSpeed.text = windSpeedText
-            Glide.with(requireContext())
-                .load(weatherEntity.currentWeather.weatherIcon)
-                .circleCrop()
-                .into(imageView)
-        }
-    }
+            weatherEntity.currentWeather.apply {
 
-    private fun getDirectionFromAbbr(abbr: String): String {
-        return when (abbr) {
-            "N" -> "north"
-            "E" -> "east"
-            "S" -> "south"
-            "W" -> "west"
-            "NW" -> "northwest"
-            "NE" -> "northeast"
-            "SW" -> "southwest"
-            else -> "southeast"
+                textViewTemperature.text = getString(R.string.temperature, temperature)
+
+                textViewHumidity.text = getString(R.string.humidity, humidity)
+
+                textViewFeelsLike.text = getString(R.string.feelslike, feelslike)
+
+                textViewWindDirection.text =
+                    getString(R.string.windDirection, getDirectionFromAbbr(this@CityDetailFragment.requireContext(),windDir))
+
+                textViewWindSpeed.text = getString(R.string.windSpeed, windSpeed)
+            }
         }
+        Glide.with(requireContext())
+            .load(weatherEntity.currentWeather.weatherIcon)
+            .circleCrop()
+            .into(binding.imageView)
     }
 
     override fun onDestroyView() {
