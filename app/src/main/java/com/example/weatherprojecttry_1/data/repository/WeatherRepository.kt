@@ -1,9 +1,11 @@
 package com.example.weatherprojecttry_1.data.repository
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import com.example.weatherprojecttry_1.data.db.WeatherDatabase
 import com.example.weatherprojecttry_1.data.db.WeatherEntity
 import com.example.weatherprojecttry_1.data.network.WeatherNetworkDataSource
+import com.example.weatherprojecttry_1.utils.LocationNotFoundException
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -23,12 +25,13 @@ class WeatherRepository @Inject constructor(
         dao.deleteWeather(weather)
     }
 
-    suspend fun fetchDataFromNetwork(city: String): WeatherEntity? {
+    suspend fun fetchDataFromNetwork(city: String): WeatherEntity {
         val weather = weatherNetworkDataSource.fetchWeather(city)
-        if (weather != null) {
+        if (weather?.location != null) {
             saveToDatabase(weather.toWeatherEntity())
+            return weather.toWeatherEntity()
         }
-        return weather?.toWeatherEntity()
+        throw LocationNotFoundException()
     }
 
 }
