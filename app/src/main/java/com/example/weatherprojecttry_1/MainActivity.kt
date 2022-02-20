@@ -12,6 +12,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.weatherprojecttry_1.databinding.ActivityMainBinding
 import com.example.weatherprojecttry_1.ui.cities.CitiesViewModel
+import com.example.weatherprojecttry_1.ui.today.TodayFragment
 import com.example.weatherprojecttry_1.ui.today.TodayViewModel
 import com.example.weatherprojecttry_1.utils.PagerAdapter
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -35,6 +36,8 @@ class MainActivity : AppCompatActivity() {
     private val todayViewModel: TodayViewModel by viewModels()
     private val citiesViewModel: CitiesViewModel by viewModels()
 
+    private val todayFragment = TodayFragment()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -44,14 +47,16 @@ class MainActivity : AppCompatActivity() {
 
         setupPager()
 
+
         citiesViewModel.mutableLiveDataClickedWeather.observe(this) {
             binding.viewPager2.setCurrentItem(2, true)
         }
 
+
     }
 
     private fun setupPager() {
-        binding.viewPager2.adapter = PagerAdapter(this)
+        binding.viewPager2.adapter = PagerAdapter(this, todayFragment)
 
         TabLayoutMediator(binding.tabLayout, binding.viewPager2) { tab: TabLayout.Tab, i: Int ->
             tab.text = when (i) {
@@ -88,6 +93,7 @@ class MainActivity : AppCompatActivity() {
         if (intent?.action == Intent.ACTION_SEARCH) {
             val query = intent.getStringExtra(SearchManager.QUERY)
             recentSuggestions.saveRecentQuery(query, null)
+            todayFragment.showProgress()
             todayViewModel.fetchCurrentWeather(query!!)
         }
     }
