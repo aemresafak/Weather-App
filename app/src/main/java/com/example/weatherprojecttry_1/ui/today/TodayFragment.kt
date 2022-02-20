@@ -47,17 +47,18 @@ class TodayFragment : WeatherFragment() {
             ActivityResultContracts.StartIntentSenderForResult()
         ) { activityResult ->
             if (activityResult.resultCode == Activity.RESULT_OK) {
-
+                getLocation()
             } else {
                 showLocationErrorToast()
             }
         }
     private val viewModel: TodayViewModel by activityViewModels()
-
+    private lateinit var geocoder: Geocoder
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestPermission()
+        geocoder = Geocoder(context)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -189,7 +190,7 @@ class TodayFragment : WeatherFragment() {
             if (it == null)
                 showLocationErrorToast()
             else {
-                val address = Geocoder(context).getFromLocation(it.latitude, it.longitude, 1)[0]
+                val address = geocoder.getFromLocation(it.latitude, it.longitude, 1)[0]
                 viewModel.fetchCurrentWeather(address.locality ?: address.adminArea)
             }
         }

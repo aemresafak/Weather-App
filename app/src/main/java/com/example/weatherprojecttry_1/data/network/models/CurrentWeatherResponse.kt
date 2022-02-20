@@ -1,9 +1,9 @@
-package com.example.weatherprojecttry_1.data.network
+package com.example.weatherprojecttry_1.data.network.models
 
 
 import com.example.weatherprojecttry_1.data.common.Location
 import com.example.weatherprojecttry_1.data.common.Request
-import com.example.weatherprojecttry_1.data.db.WeatherEntity
+import com.example.weatherprojecttry_1.data.db.models.WeatherEntity
 import com.google.gson.annotations.SerializedName
 
 data class CurrentWeatherResponse(

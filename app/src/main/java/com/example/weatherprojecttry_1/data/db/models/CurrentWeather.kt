@@ -1,4 +1,4 @@
-package com.example.weatherprojecttry_1.data.db
+package com.example.weatherprojecttry_1.data.db.models
 
 
 data class CurrentWeather(

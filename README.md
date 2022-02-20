@@ -1,11 +1,18 @@
 # Weather-App
-My first android project. Created a simple weather app.
+My first android project. Created a simple weather app that mainly composes of three features:
+- Display current location weather data
+- Display currently searched data in a list
+- Display details of a list item when clicked on it
 
-Sample screenshot:
+Some of the libraries used for this app are Room, Retrofit, Hilt - Dagger, Coroutines, and Glide.
 
-<<<<<<< HEAD
-![image](https://user-images.githubusercontent.com/59789023/154436652-628f9866-0b1c-4495-9555-abdae9e5e4ea.png)
-=======
+Some of the features in this app:
+- Search current location weather using GPS
+- Search a location weather using WeatherStack API
+- Search based on recently searched cities
+- Voice search
+- Swipe to delete an item
 
-![2022-02-17 11_32_07-Trying Room – MainActivity kt  Trying_Room app](https://user-images.githubusercontent.com/59789023/154436494-0a02acbc-c47e-4e98-9662-9a3ab08c8cd7.png)
->>>>>>> version2
+![Hnet com-image (1)](https://user-images.githubusercontent.com/59789023/154850873-905ee35d-fd48-4262-92e7-1123664ebaac.png)
+![Hnet com-image (2)](https://user-images.githubusercontent.com/59789023/154850953-ba9fb636-0f52-483f-9cca-c2ef4e6748d6.png)
+

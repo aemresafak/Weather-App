@@ -1,9 +1,8 @@
 package com.example.weatherprojecttry_1.data.repository
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import com.example.weatherprojecttry_1.data.db.WeatherDatabase
-import com.example.weatherprojecttry_1.data.db.WeatherEntity
+import com.example.weatherprojecttry_1.data.db.models.WeatherEntity
 import com.example.weatherprojecttry_1.data.network.WeatherNetworkDataSource
 import com.example.weatherprojecttry_1.utils.LocationNotFoundException
 import javax.inject.Inject
