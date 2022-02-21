@@ -7,6 +7,7 @@ import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.IntentSenderRequest
@@ -25,6 +26,7 @@ import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import java.lang.NullPointerException
 
 private const val TAG = "TodayFragment"
 
@@ -67,20 +69,14 @@ class TodayFragment : WeatherFragment() {
             if (it != null)
                 updateUI(it)
             else {
-                binding.apply {
-                    textViewUpdate.visibility = View.INVISIBLE
-                    progressBar.visibility = View.INVISIBLE
-                }
+                hideProgress()
             }
         }
 
         viewModel.getLiveDataFlag().observe(viewLifecycleOwner) {
             if (it!! > 0) {
                 Toast.makeText(context, "Location not found!", Toast.LENGTH_SHORT).show()
-                binding.apply {
-                    textViewUpdate.visibility = View.INVISIBLE
-                    progressBar.visibility = View.INVISIBLE
-                }
+                hideProgress()
             }
         }
     }
@@ -201,13 +197,28 @@ class TodayFragment : WeatherFragment() {
                 showLocationErrorToast()
             else {
                 val address = geocoder.getFromLocation(it.latitude, it.longitude, 1)[0]
-                viewModel.fetchCurrentWeather(address.locality ?: address.adminArea)
+                try {
+                    viewModel.fetchCurrentWeather(address.locality ?: address.adminArea)
+                }
+                catch (e: NullPointerException) {
+                    Toast.makeText(context,"Unknown location",Toast.LENGTH_SHORT).show()
+                    hideProgress()
+                }
             }
         }
         task.addOnFailureListener {
             showLocationErrorToast()
-            binding.progressBar.visibility = View.INVISIBLE
-            binding.textViewUpdate.visibility = View.INVISIBLE
+            hideProgress()
+        }
+    }
+
+    /**
+     * helper method that hides update text and progress
+     */
+    private fun hideProgress() {
+        binding.apply {
+            progressBar.visibility = View.INVISIBLE
+            textViewUpdate.visibility = View.INVISIBLE
         }
     }
 
