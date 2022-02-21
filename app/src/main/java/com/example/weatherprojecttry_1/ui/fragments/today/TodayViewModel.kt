@@ -1,7 +1,5 @@
-package com.example.weatherprojecttry_1.ui.today
+package com.example.weatherprojecttry_1.ui.fragments.today
 
-import android.content.Context
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,8 +8,6 @@ import com.example.weatherprojecttry_1.data.db.models.WeatherEntity
 import com.example.weatherprojecttry_1.data.repository.WeatherRepository
 import com.example.weatherprojecttry_1.utils.LocationNotFoundException
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

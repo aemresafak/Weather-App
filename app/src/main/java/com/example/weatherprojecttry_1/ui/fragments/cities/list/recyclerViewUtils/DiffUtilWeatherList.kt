@@ -1,4 +1,4 @@
-package com.example.weatherprojecttry_1.ui.cities.recyclerViewUtils
+package com.example.weatherprojecttry_1.ui.fragments.cities.list.recyclerViewUtils
 
 import androidx.recyclerview.widget.DiffUtil
 import com.example.weatherprojecttry_1.data.db.models.WeatherEntity

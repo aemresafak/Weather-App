@@ -1,4 +1,4 @@
-package com.example.weatherprojecttry_1
+package com.example.weatherprojecttry_1.ui.activities.main
 
 import android.content.Context
 import android.provider.SearchRecentSuggestions
@@ -14,9 +14,6 @@ import dagger.hilt.android.qualifiers.ActivityContext
 @Module
 @InstallIn(ActivityComponent::class)
 object MainModule {
-    @Provides
-    fun provideLocationProvider(@ActivityContext context: Context):
-            FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
 
     @Provides
     fun provideSuggestions(@ActivityContext context: Context): SearchRecentSuggestions =

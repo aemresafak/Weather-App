@@ -1,4 +1,4 @@
-package com.example.weatherprojecttry_1.ui.today
+package com.example.weatherprojecttry_1.ui.fragments.today
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -7,7 +7,6 @@ import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.IntentSenderRequest
@@ -15,9 +14,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
-import com.example.weatherprojecttry_1.MainActivity
-import com.example.weatherprojecttry_1.ui.WeatherFragment
+import com.example.weatherprojecttry_1.ui.activities.main.MainActivity
+import com.example.weatherprojecttry_1.ui.fragments.WeatherFragment
 import com.google.android.gms.common.api.ResolvableApiException
+import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
@@ -27,12 +27,15 @@ import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import java.lang.NullPointerException
+import javax.inject.Inject
 
 private const val TAG = "TodayFragment"
 
 @AndroidEntryPoint
 class TodayFragment : WeatherFragment() {
 
+    @Inject lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+    @Inject lateinit var geocoder: Geocoder
 
     val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -55,7 +58,6 @@ class TodayFragment : WeatherFragment() {
             }
         }
     private val viewModel: TodayViewModel by activityViewModels()
-    private lateinit var geocoder: Geocoder
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -187,7 +189,7 @@ class TodayFragment : WeatherFragment() {
      */
     @SuppressLint("MissingPermission")
     private fun getLocation() {
-        val task = (activity as MainActivity).fusedLocationProviderClient.getCurrentLocation(
+        val task = fusedLocationProviderClient.getCurrentLocation(
             LocationRequest.PRIORITY_HIGH_ACCURACY,
             CancellationTokenSource().token
         )

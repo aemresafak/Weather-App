@@ -1,4 +1,4 @@
-package com.example.weatherprojecttry_1.ui.cities
+package com.example.weatherprojecttry_1.ui.fragments.cities.list
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -10,15 +10,16 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.weatherprojecttry_1.data.db.models.WeatherEntity
-import com.example.weatherprojecttry_1.databinding.FragmentCitiesBinding
-import com.example.weatherprojecttry_1.ui.cities.recyclerViewUtils.CitiesAdapter
+import com.example.weatherprojecttry_1.databinding.FragmentCityListBinding
+import com.example.weatherprojecttry_1.ui.fragments.cities.CitiesViewModel
+import com.example.weatherprojecttry_1.ui.fragments.cities.list.recyclerViewUtils.CitiesAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class CitiesFragment : Fragment(), CitiesAdapter.ItemClickHandler {
+class CityListFragment : Fragment(), CitiesAdapter.ItemClickHandler {
 
-    private var _binding: FragmentCitiesBinding? = null
+    private var _binding: FragmentCityListBinding? = null
     private val binding get() = _binding!!
 
 
@@ -32,7 +33,7 @@ class CitiesFragment : Fragment(), CitiesAdapter.ItemClickHandler {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentCitiesBinding.inflate(layoutInflater, container, false)
+        _binding = FragmentCityListBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 

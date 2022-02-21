@@ -1,4 +1,4 @@
-package com.example.weatherprojecttry_1.ui.cities
+package com.example.weatherprojecttry_1.ui.fragments.cities
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

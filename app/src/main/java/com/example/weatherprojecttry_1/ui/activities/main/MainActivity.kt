@@ -1,4 +1,4 @@
-package com.example.weatherprojecttry_1
+package com.example.weatherprojecttry_1.ui.activities.main
 
 import android.app.SearchManager
 import android.content.Context
@@ -10,10 +10,11 @@ import android.view.MenuItem
 import android.widget.SearchView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.example.weatherprojecttry_1.R
 import com.example.weatherprojecttry_1.databinding.ActivityMainBinding
-import com.example.weatherprojecttry_1.ui.cities.CitiesViewModel
-import com.example.weatherprojecttry_1.ui.today.TodayFragment
-import com.example.weatherprojecttry_1.ui.today.TodayViewModel
+import com.example.weatherprojecttry_1.ui.fragments.cities.CitiesViewModel
+import com.example.weatherprojecttry_1.ui.fragments.today.TodayFragment
+import com.example.weatherprojecttry_1.ui.fragments.today.TodayViewModel
 import com.example.weatherprojecttry_1.utils.PagerAdapter
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.material.tabs.TabLayout
@@ -27,8 +28,6 @@ private const val TAG = "MainActivity"
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    @Inject
-    lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var binding: ActivityMainBinding
 
     @Inject
@@ -60,9 +59,9 @@ class MainActivity : AppCompatActivity() {
 
         TabLayoutMediator(binding.tabLayout, binding.viewPager2) { tab: TabLayout.Tab, i: Int ->
             tab.text = when (i) {
-                0 -> "Today"
-                1 -> "Cities"
-                else -> "City Details"
+                0 -> "TODAY"
+                1 -> "CITIES"
+                else -> "CITY DETAILS"
             }
         }.attach()
 

@@ -18,7 +18,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WeatherProjectTry1">
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.activities.main.MainActivity"
             android:launchMode="singleTop"
             android:exported="true">
             <intent-filter>
