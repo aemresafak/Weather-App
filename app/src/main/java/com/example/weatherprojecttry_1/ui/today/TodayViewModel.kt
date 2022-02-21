@@ -16,9 +16,20 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class TodayViewModel @Inject constructor(private val repository: WeatherRepository, @ApplicationContext val context: Context): ViewModel() {
+class TodayViewModel @Inject constructor(private val repository: WeatherRepository): ViewModel() {
     private val mutableLiveDataCurrentWeather = MutableLiveData<WeatherEntity?>()
     fun getLiveDataCurrentWeather(): LiveData<WeatherEntity?> = mutableLiveDataCurrentWeather
+
+    /*
+     * Flag is used to detect an occurrence of error
+     * from the UI element that uses this view model
+     * The value it contains is of no importance
+     * Every time an error occurs, the live data is updated
+     */
+    private val mutableLiveDataFlag = MutableLiveData<Int?>().also {
+        it.value = 0
+    }
+    fun getLiveDataFlag() : LiveData<Int?> = mutableLiveDataFlag
 
     fun fetchCurrentWeather(city: String) {
         viewModelScope.launch {
@@ -26,9 +37,7 @@ class TodayViewModel @Inject constructor(private val repository: WeatherReposito
                 val weather = repository.fetchDataFromNetwork(city)
                 mutableLiveDataCurrentWeather.postValue(weather)
             } catch (e: LocationNotFoundException) {
-                launch(Dispatchers.Main) {
-                    Toast.makeText(context, "Location not found!", Toast.LENGTH_LONG).show()
-                }
+                mutableLiveDataFlag.value = mutableLiveDataFlag.value!! + 1
             }
         }
     }

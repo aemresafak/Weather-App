@@ -73,6 +73,16 @@ class TodayFragment : WeatherFragment() {
                 }
             }
         }
+
+        viewModel.getLiveDataFlag().observe(viewLifecycleOwner) {
+            if (it!! > 0) {
+                Toast.makeText(context, "Location not found!", Toast.LENGTH_SHORT).show()
+                binding.apply {
+                    textViewUpdate.visibility = View.INVISIBLE
+                    progressBar.visibility = View.INVISIBLE
+                }
+            }
+        }
     }
 
 
