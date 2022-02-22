@@ -7,6 +7,7 @@ import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.IntentSenderRequest
@@ -195,8 +196,10 @@ class TodayFragment : WeatherFragment() {
         )
         showProgress()
         task.addOnSuccessListener {
-            if (it == null)
+            if (it == null) {
                 showLocationErrorToast()
+                hideProgress()
+            }
             else {
                 val address = geocoder.getFromLocation(it.latitude, it.longitude, 1)[0]
                 try {
