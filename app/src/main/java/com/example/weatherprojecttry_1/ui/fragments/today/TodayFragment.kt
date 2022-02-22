@@ -15,6 +15,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import com.example.weatherprojecttry_1.R
 import com.example.weatherprojecttry_1.ui.activities.main.MainActivity
 import com.example.weatherprojecttry_1.ui.fragments.WeatherFragment
 import com.google.android.gms.common.api.ResolvableApiException
@@ -58,12 +60,13 @@ class TodayFragment : WeatherFragment() {
                 showLocationErrorToast()
             }
         }
-    private val viewModel: TodayViewModel by activityViewModels()
+    private val viewModel: TodayViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requestPermission()
-        geocoder = Geocoder(context)
+        if (savedInstanceState == null) {
+            requestPermission()
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -81,6 +84,10 @@ class TodayFragment : WeatherFragment() {
                 Toast.makeText(context, "Location not found!", Toast.LENGTH_SHORT).show()
                 hideProgress()
             }
+        }
+
+        parentFragmentManager.setFragmentResultListener(getString(R.string.SEARCH_REQUEST_KEY), viewLifecycleOwner) { _: String, bundle: Bundle ->
+            viewModel.fetchCurrentWeather(bundle.getString("query")!!)
         }
     }
 
@@ -230,7 +237,7 @@ class TodayFragment : WeatherFragment() {
     /**
      * utility method that shows a progress bar
      */
-    fun showProgress() {
+    private fun showProgress() {
         binding.apply {
             progressBar.visibility = View.VISIBLE
             textViewUpdate.visibility = View.VISIBLE

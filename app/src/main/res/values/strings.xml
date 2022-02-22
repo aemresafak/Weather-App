@@ -8,4 +8,10 @@
     <string name="northeast">northeast</string>
     <string name="southwest">southwest</string>
     <string name="southeast">southeast</string>
+    <string name="temperature">%d°</string>
+    <string name="humidity">Humidity is %d.</string>
+    <string name="feelslike">Feels like %d°.</string>
+    <string name="windDirection">Wind direction is %s.</string>
+    <string name="windSpeed">Wind speed is %d km/h</string>
+    <string name="SEARCH_REQUEST_KEY">SEARCH_REQUEST</string>
 </resources>
