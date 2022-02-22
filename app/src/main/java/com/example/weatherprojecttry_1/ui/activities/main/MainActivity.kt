@@ -32,10 +32,7 @@ class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var recentSuggestions: SearchRecentSuggestions
-    private val todayViewModel: TodayViewModel by viewModels()
     private val citiesViewModel: CitiesViewModel by viewModels()
-
-    private val todayFragment = TodayFragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,7 +52,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupPager() {
-        binding.viewPager2.adapter = PagerAdapter(this, todayFragment)
+        binding.viewPager2.adapter = PagerAdapter(this)
 
         TabLayoutMediator(binding.tabLayout, binding.viewPager2) { tab: TabLayout.Tab, i: Int ->
             tab.text = when (i) {
@@ -92,8 +89,9 @@ class MainActivity : AppCompatActivity() {
         if (intent?.action == Intent.ACTION_SEARCH) {
             val query = intent.getStringExtra(SearchManager.QUERY)
             recentSuggestions.saveRecentQuery(query, null)
-            todayFragment.showProgress()
-            todayViewModel.fetchCurrentWeather(query!!)
+            supportFragmentManager.setFragmentResult(getString(R.string.SEARCH_REQUEST_KEY), Bundle().apply {
+                putString("query",query)
+            })
         }
     }
 }

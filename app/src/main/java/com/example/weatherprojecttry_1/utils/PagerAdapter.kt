@@ -7,12 +7,12 @@ import com.example.weatherprojecttry_1.ui.fragments.cities.list.CityListFragment
 import com.example.weatherprojecttry_1.ui.fragments.cities.detail.CityDetailFragment
 import com.example.weatherprojecttry_1.ui.fragments.today.TodayFragment
 
-class PagerAdapter(activity: FragmentActivity, val fragment: TodayFragment) : FragmentStateAdapter(activity) {
+class PagerAdapter(activity: FragmentActivity) : FragmentStateAdapter(activity) {
     override fun getItemCount(): Int = 3
 
     override fun createFragment(position: Int): Fragment {
         return when (position) {
-            0 -> fragment
+            0 -> TodayFragment()
             1 -> CityListFragment()
             else -> CityDetailFragment()
         }
