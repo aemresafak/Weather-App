@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="temperature">%d°</string>
-    <string name="humidity">Humidity is %d.</string>
-    <string name="feelslike">Feels like %d°.</string>
-    <string name="windDirection">Wind direction is %s.</string>
-    <string name="windSpeed">Wind speed is %d km/h</string>
-
-</resources>
