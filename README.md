@@ -1,5 +1,5 @@
 # Weather-App
-My first android project. Created a simple weather app that mainly composes of three features:
+Created a simple weather app that mainly composes of three features:
 - Display current location weather data
 - Display currently searched data in a list
 - Display details of a list item when clicked on it
